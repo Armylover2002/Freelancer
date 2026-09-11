@@ -1,0 +1,329 @@
+openapi: 3.0.3
+info:
+  title: Agency Platform API
+  version: 1.0.0
+  description: >
+    REST API for the agency website and admin CMS. Public endpoints are read-only
+    (plus enquiry/analytics submission); all /api/admin routes require a valid
+    admin session (httpOnly cookie set at login) and enforce owner/admin/staff
+    role checks server-side.
+servers:
+  - url: http://localhost:5000/api
+    description: Local development
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: agency_admin_token
+  schemas:
+    ApiSuccess:
+      type: object
+      properties:
+        success: { type: boolean, example: true }
+        data: {}
+        meta:
+          type: object
+          properties:
+            page: { type: integer }
+            limit: { type: integer }
+            total: { type: integer }
+            totalPages: { type: integer }
+    ApiError:
+      type: object
+      properties:
+        success: { type: boolean, example: false }
+        error:
+          type: object
+          properties:
+            message: { type: string }
+            details:
+              type: array
+              items:
+                type: object
+                properties:
+                  path: { type: string }
+                  message: { type: string }
+
+tags:
+  - name: Public
+  - name: Admin Auth
+  - name: Admin
+
+paths:
+  /health:
+    get:
+      tags: [Public]
+      summary: Health check
+      responses:
+        '200': { description: OK }
+
+  /public/projects:
+    get:
+      tags: [Public]
+      summary: List published portfolio projects
+      parameters:
+        - in: query
+          name: category
+          schema: { type: string }
+        - in: query
+          name: featured
+          schema: { type: string, enum: ['true', 'false'] }
+        - in: query
+          name: search
+          schema: { type: string }
+        - in: query
+          name: page
+          schema: { type: integer }
+        - in: query
+          name: limit
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Paginated list of projects
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiSuccess' }
+
+  /public/projects/{slug}:
+    get:
+      tags: [Public]
+      summary: Get a published project case study by slug
+      parameters:
+        - in: path
+          name: slug
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Project found }
+        '404': { description: Not found }
+
+  /public/services:
+    get:
+      tags: [Public]
+      summary: List active services
+      responses:
+        '200': { description: OK }
+
+  /public/pricing:
+    get:
+      tags: [Public]
+      summary: List active pricing plans
+      responses:
+        '200': { description: OK }
+
+  /public/team:
+    get:
+      tags: [Public]
+      summary: List active team members
+      responses:
+        '200': { description: OK }
+
+  /public/testimonials:
+    get:
+      tags: [Public]
+      summary: List published testimonials
+      responses:
+        '200': { description: OK }
+
+  /public/faqs:
+    get:
+      tags: [Public]
+      summary: List published FAQs
+      responses:
+        '200': { description: OK }
+
+  /public/settings:
+    get:
+      tags: [Public]
+      summary: Public-safe site settings (branding, contact, SEO defaults)
+      responses:
+        '200': { description: OK }
+
+  /public/enquiries:
+    post:
+      tags: [Public]
+      summary: Submit the "Start Your Project" multi-step enquiry form
+      description: Rate-limited (5/hour/IP). Validates with Zod. Honeypot field `website` must be empty.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '201': { description: Enquiry created; returns confirmation message }
+        '400':
+          description: Validation failed
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiError' }
+        '429': { description: Rate limited }
+
+  /public/enquiries/upload:
+    post:
+      tags: [Public]
+      summary: Upload a brand asset / reference file attached to an in-progress enquiry
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file: { type: string, format: binary }
+      responses:
+        '201': { description: Uploaded to Cloudinary; returns { url, publicId } }
+
+  /public/analytics/events:
+    post:
+      tags: [Public]
+      summary: Record a first-party analytics event (page_view, project_cta_click, enquiry_start, enquiry_submit, contact_click)
+      responses:
+        '201': { description: Recorded }
+
+  /admin/auth/login:
+    post:
+      tags: [Admin Auth]
+      summary: Admin login (sets httpOnly session cookie)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string }
+                password: { type: string }
+      responses:
+        '200': { description: Logged in }
+        '401': { description: Invalid credentials }
+
+  /admin/auth/logout:
+    post:
+      tags: [Admin Auth]
+      summary: Clear the admin session
+      responses:
+        '200': { description: Logged out }
+
+  /admin/auth/me:
+    get:
+      tags: [Admin Auth]
+      summary: Get the current authenticated admin profile
+      security: [{ cookieAuth: [] }]
+      responses:
+        '200': { description: OK }
+        '401': { description: Not authenticated }
+
+  /admin/dashboard:
+    get:
+      tags: [Admin]
+      summary: KPIs, pipeline breakdown, enquiry trend, recent activity
+      security: [{ cookieAuth: [] }]
+      responses:
+        '200': { description: OK }
+
+  /admin/enquiries:
+    get:
+      tags: [Admin]
+      summary: List/search/filter leads
+      security: [{ cookieAuth: [] }]
+      responses:
+        '200': { description: OK }
+
+  /admin/enquiries/{id}/status:
+    patch:
+      tags: [Admin]
+      summary: Move a lead through the pipeline (NEW -> CONTACTED -> ... -> WON/LOST -> PROJECT)
+      security: [{ cookieAuth: [] }]
+      responses:
+        '200': { description: Updated }
+
+  /admin/enquiries/export.csv:
+    get:
+      tags: [Admin]
+      summary: Export all enquiries as CSV
+      security: [{ cookieAuth: [] }]
+      responses:
+        '200': { description: CSV file }
+
+  /admin/projects:
+    get:
+      tags: [Admin]
+      summary: List all projects (any status)
+      security: [{ cookieAuth: [] }]
+      responses: { '200': { description: OK } }
+    post:
+      tags: [Admin]
+      summary: Create a project
+      security: [{ cookieAuth: [] }]
+      responses: { '201': { description: Created } }
+
+  /admin/projects/{id}:
+    patch:
+      tags: [Admin]
+      summary: Update a project
+      security: [{ cookieAuth: [] }]
+      responses: { '200': { description: Updated } }
+    delete:
+      tags: [Admin]
+      summary: Delete a project (owner/admin only)
+      security: [{ cookieAuth: [] }]
+      responses: { '200': { description: Deleted } }
+
+  /admin/media:
+    get:
+      tags: [Admin]
+      summary: List uploaded media
+      security: [{ cookieAuth: [] }]
+      responses: { '200': { description: OK } }
+    post:
+      tags: [Admin]
+      summary: Upload one or more images to Cloudinary
+      security: [{ cookieAuth: [] }]
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                files:
+                  type: array
+                  items: { type: string, format: binary }
+      responses: { '201': { description: Uploaded } }
+
+  /admin/settings:
+    get:
+      tags: [Admin]
+      summary: Get site settings
+      security: [{ cookieAuth: [] }]
+      responses: { '200': { description: OK } }
+    patch:
+      tags: [Admin]
+      summary: Update site settings (owner/admin only)
+      security: [{ cookieAuth: [] }]
+      responses: { '200': { description: Updated } }
+
+  /admin/users:
+    get:
+      tags: [Admin]
+      summary: List admin users (owner only)
+      security: [{ cookieAuth: [] }]
+      responses: { '200': { description: OK } }
+    post:
+      tags: [Admin]
+      summary: Invite a new admin/staff user (owner only)
+      security: [{ cookieAuth: [] }]
+      responses: { '201': { description: Created } }
+
+  /admin/audit-logs:
+    get:
+      tags: [Admin]
+      summary: Security/content change audit trail (owner/admin only)
+      security: [{ cookieAuth: [] }]
+      responses: { '200': { description: OK } }
+
+# Services, Pricing, Team, Testimonials and FAQs expose the same CRUD shape as
+# Projects at /admin/services, /admin/pricing, /admin/team, /admin/testimonials,
+# /admin/faqs - GET (list/detail), POST (create), PATCH /{id} (update), DELETE /{id}.
