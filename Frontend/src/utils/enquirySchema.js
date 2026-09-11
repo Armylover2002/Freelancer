@@ -34,7 +34,13 @@ export const enquiryFormSchema = z.object({
 
   // Step 6 - Design
   designStyle: z.enum(['modern', 'minimal', 'corporate', 'luxury', 'bold', 'creative', 'tech', 'recommend']),
-  referenceUrls: z.array(z.string()).optional().default([]),
+  referenceUrls: z
+    .array(z.string().trim())
+    .optional()
+    .default([])
+    .refine((arr) => arr.every((u) => /^https?:\/\/.+\..+/i.test(u)), {
+      message: 'Each reference link must be a full URL starting with http:// or https:// (one per line)',
+    }),
   brandAssets: z.array(z.object({ url: z.string(), publicId: z.string().optional(), originalName: z.string().optional() })).optional().default([]),
 
   // Step 7 - Commercial
@@ -94,6 +100,42 @@ export function toApiPayload(values) {
     consent: values.consent,
     website: values.website || '',
   };
+}
+
+// Maps a backend validation error path (from Backend/src/validators/enquiry.validator.js,
+// which validates the nested API payload shape) back to this form's flat field names,
+// so a server-side rejection can highlight the exact field and jump to the right step.
+const BACKEND_TO_FRONTEND_FIELD = {
+  'contact.name': 'name',
+  'contact.business': 'business',
+  'contact.email': 'email',
+  'contact.phone': 'phone',
+  'contact.country': 'country',
+  'contact.preferredContactMethod': 'preferredContactMethod',
+  'business.description': 'businessDescription',
+  'business.targetCustomers': 'targetCustomers',
+  'business.existingUrl': 'existingUrl',
+  'business.painPoint': 'painPoint',
+  projectType: 'projectType',
+  pages: 'pages',
+  features: 'features',
+  'design.style': 'designStyle',
+  'design.referenceUrls': 'referenceUrls',
+  'design.brandAssets': 'brandAssets',
+  budgetRange: 'budgetRange',
+  timeline: 'timeline',
+  brief: 'brief',
+  heardFrom: 'heardFrom',
+  consent: 'consent',
+};
+
+export function mapBackendPathToField(path) {
+  if (!path) return null;
+  const normalized = path.replace(/\.\d+(\..*)?$/, ''); // "design.referenceUrls.0" -> "design.referenceUrls"
+  const field = BACKEND_TO_FRONTEND_FIELD[normalized];
+  if (!field) return null;
+  const step = STEP_FIELDS.findIndex((fields) => fields.includes(field));
+  return { field, step: step === -1 ? null : step };
 }
 
 export const DEFAULT_VALUES = {

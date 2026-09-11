@@ -9,6 +9,7 @@ const QUICK_LINKS = [
   { to: '/portfolio', label: 'Portfolio' },
   { to: '/pricing', label: 'Pricing' },
   { to: '/faq', label: 'FAQ' },
+  { to: '/track-request', label: 'Track Your Request' },
 ];
 
 const LEGAL_LINKS = [
@@ -16,7 +17,25 @@ const LEGAL_LINKS = [
   { to: '/terms', label: 'Terms of Service' },
 ];
 
-const SOCIAL_ICONS = { linkedin: LinkedinIcon, twitter: TwitterIcon, instagram: InstagramIcon, github: GithubIcon };
+const SOCIAL_META = {
+  linkedin: {
+    Icon: LinkedinIcon,
+    className: 'bg-[#0A66C2] text-white hover:bg-[#004182]',
+  },
+  twitter: {
+    Icon: TwitterIcon,
+    className: 'bg-black text-white ring-1 ring-inset ring-white/15 hover:bg-neutral-800',
+  },
+  instagram: {
+    Icon: InstagramIcon,
+    className:
+      'bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] text-white hover:brightness-110',
+  },
+  github: {
+    Icon: GithubIcon,
+    className: 'bg-white text-[#181717] hover:bg-neutral-200',
+  },
+};
 
 export function Footer() {
   const { data: settings } = useSiteSettings();
@@ -32,14 +51,14 @@ export function Footer() {
             {settings?.branding?.tagline || 'We design and build software that grows your business.'}
           </p>
           <div className="mt-4 flex gap-3">
-            {Object.entries(SOCIAL_ICONS).map(([key, Icon]) =>
+            {Object.entries(SOCIAL_META).map(([key, { Icon, className }]) =>
               socials[key] ? (
                 <a
                   key={key}
                   href={socials[key]}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-full bg-white/5 p-2 text-white/70 transition hover:bg-white/10 hover:text-white"
+                  className={`rounded-full p-2 transition ${className}`}
                   aria-label={key}
                 >
                   <Icon className="h-4 w-4" />

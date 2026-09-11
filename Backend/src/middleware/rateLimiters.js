@@ -28,6 +28,17 @@ export const analyticsLimiter = rateLimit({
   message: { success: false, error: { message: 'Too many events.' } },
 });
 
+export const trackLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error: { message: 'Too many lookup attempts. Please wait a few minutes and try again.' },
+  },
+});
+
 export const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 10,

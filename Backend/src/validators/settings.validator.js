@@ -50,4 +50,10 @@ export const siteSettingsSchema = z.object({
     })
     .optional(),
   enquiryConfirmationMessage: z.string().max(500).optional(),
+  legal: z
+    .object({
+      privacyPolicy: z.string().max(20000).optional().or(z.literal('')),
+      termsOfService: z.string().max(20000).optional().or(z.literal('')),
+    })
+    .optional(),
 });

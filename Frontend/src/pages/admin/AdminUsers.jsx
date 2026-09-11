@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
 import { adminUsersApi } from '../../api/adminApi.js';
-import { extractErrorMessage } from '../../api/axiosClient.js';
+import { extractErrorMessage, applyServerErrors } from '../../api/axiosClient.js';
 import { useAuth } from '../../hooks/useAuth.js';
 import { AdminToolbar } from '../../components/admin/AdminToolbar.jsx';
 import { DataTable, ToggleSwitch } from '../../components/admin/DataTable.jsx';
@@ -18,14 +18,17 @@ export default function AdminUsers() {
   const queryClient = useQueryClient();
 
   const { data: users, isLoading } = useQuery({ queryKey: ['admin', 'users'], queryFn: adminUsersApi.list });
-  const { register, handleSubmit, reset, formState: { errors } } = useForm({ defaultValues: { name: '', email: '', password: '', role: 'admin' } });
+  const { register, handleSubmit, reset, setError, formState: { errors } } = useForm({ defaultValues: { name: '', email: '', password: '', role: 'admin' } });
 
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ['admin', 'users'] });
 
   const inviteMutation = useMutation({
     mutationFn: adminUsersApi.invite,
     onSuccess: () => { toast.success('Admin invited'); reset(); setModalOpen(false); invalidate(); },
-    onError: (err) => toast.error(extractErrorMessage(err)),
+    onError: (err) => {
+      toast.error(extractErrorMessage(err));
+      applyServerErrors(err, setError);
+    },
   });
 
   const updateMutation = useMutation({

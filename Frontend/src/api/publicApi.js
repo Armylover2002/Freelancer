@@ -10,6 +10,7 @@ export const publicApi = {
   getFaqs: () => unwrap(publicClient.get('/faqs')),
   getSettings: () => unwrap(publicClient.get('/settings')),
   createEnquiry: (payload) => unwrap(publicClient.post('/enquiries', payload)),
+  trackEnquiries: (email) => unwrap(publicClient.get('/enquiries/track', { params: { email } })),
   uploadEnquiryFile: (file, onUploadProgress) => {
     const form = new FormData();
     form.append('file', file);

@@ -1,11 +1,27 @@
 import { useSiteSettings } from '../../hooks/useSiteSettings.js';
 import { useDocumentHead } from '../../hooks/useDocumentHead.js';
+import { LegalContent } from '../../components/ui/LegalContent.jsx';
 
 export default function Privacy() {
   const { data: settings } = useSiteSettings();
   const agencyName = settings?.branding?.agencyName || 'Your Agency';
+  const customPolicy = settings?.legal?.privacyPolicy?.trim();
 
   useDocumentHead({ title: 'Privacy Policy', description: `Privacy policy for ${agencyName}.` });
+
+  if (customPolicy) {
+    return (
+      <div className="section-y container-page">
+        <div className="mx-auto max-w-3xl">
+          <h1 className="text-3xl font-extrabold text-ink-900">Privacy Policy</h1>
+          <p className="mt-2 text-sm text-ink-900/45">Last updated: {new Date().toLocaleDateString()}</p>
+          <div className="mt-8">
+            <LegalContent text={customPolicy} />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="section-y container-page">

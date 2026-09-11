@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { teamAdminApi } from '../../api/adminApi.js';
+import { applyServerErrors } from '../../api/axiosClient.js';
 import { useAdminCrud } from '../../hooks/useAdminCrud.js';
 import { AdminToolbar } from '../../components/admin/AdminToolbar.jsx';
 import { DataTable, ToggleSwitch } from '../../components/admin/DataTable.jsx';
@@ -16,7 +17,7 @@ export default function Team() {
   const [deleteTarget, setDeleteTarget] = useState(null);
 
   const { items, isLoading, create, update, remove, isSaving, isDeleting } = useAdminCrud('team', teamAdminApi, { limit: 50 });
-  const { register, handleSubmit, control, reset } = useForm({ defaultValues: EMPTY });
+  const { register, handleSubmit, control, reset, setError, formState: { errors } } = useForm({ defaultValues: EMPTY });
 
   useEffect(() => {
     if (modalItem) reset({ ...EMPTY, ...modalItem, socials: modalItem.socials || EMPTY.socials });
@@ -27,7 +28,9 @@ export default function Team() {
       if (values._id) await update({ id: values._id, payload: values });
       else await create(values);
       setModalItem(null);
-    } catch { /* handled */ }
+    } catch (err) {
+      applyServerErrors(err, setError);
+    }
   };
 
   const columns = [
@@ -54,8 +57,8 @@ export default function Team() {
             <Controller name="photo" control={control} render={({ field }) => <ImageUploader value={field.value} onChange={field.onChange} folder="team" />} />
           </FormField>
           <div className="grid gap-4 sm:grid-cols-2">
-            <FormField label="Name" required><Input {...register('name', { required: true })} /></FormField>
-            <FormField label="Role" required><Input {...register('role', { required: true })} placeholder="Full-Stack Developer" /></FormField>
+            <FormField label="Name" required error={errors.name?.message}><Input {...register('name', { required: 'Name is required' })} /></FormField>
+            <FormField label="Role" required error={errors.role?.message}><Input {...register('role', { required: 'Role is required' })} placeholder="Full-Stack Developer" /></FormField>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <FormField label="Experience"><Input {...register('experienceText')} placeholder="5+ years" /></FormField>

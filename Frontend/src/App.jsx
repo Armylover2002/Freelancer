@@ -13,6 +13,7 @@ const Portfolio = lazy(() => import('./pages/public/Portfolio.jsx'));
 const ProjectDetail = lazy(() => import('./pages/public/ProjectDetail.jsx'));
 const Pricing = lazy(() => import('./pages/public/Pricing.jsx'));
 const StartProject = lazy(() => import('./pages/public/StartProject.jsx'));
+const TrackEnquiry = lazy(() => import('./pages/public/TrackEnquiry.jsx'));
 const Contact = lazy(() => import('./pages/public/Contact.jsx'));
 const Faq = lazy(() => import('./pages/public/Faq.jsx'));
 const Privacy = lazy(() => import('./pages/public/Privacy.jsx'));
@@ -52,6 +53,7 @@ export default function App() {
           <Route path="portfolio/:slug" element={<ProjectDetail />} />
           <Route path="pricing" element={<Pricing />} />
           <Route path="start-project" element={<StartProject />} />
+          <Route path="track-request" element={<TrackEnquiry />} />
           <Route path="contact" element={<Contact />} />
           <Route path="faq" element={<Faq />} />
           <Route path="privacy" element={<Privacy />} />
