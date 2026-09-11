@@ -45,10 +45,14 @@ export default function Login() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-ink-950 px-4">
-      <AnimatedReveal className="w-full max-w-sm">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-ink-950 px-4">
+      <div className="pointer-events-none absolute inset-0 bg-dot-grid bg-[length:22px_22px] opacity-[0.12]" />
+      <div className="pointer-events-none absolute -left-20 top-10 h-72 w-72 rounded-full bg-accent-500/25 blur-3xl animate-float" />
+      <div className="pointer-events-none absolute right-[-4rem] bottom-10 h-80 w-80 rounded-full bg-fuchsia-500/20 blur-3xl animate-float" style={{ animationDelay: '2s' }} />
+
+      <AnimatedReveal className="relative w-full max-w-sm">
         <div className="card p-8">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-ink-900 text-white">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-aurora-gradient text-white shadow-glow">
             <ShieldCheck className="h-6 w-6" />
           </div>
           <h1 className="mt-5 text-center text-xl font-bold text-ink-900">Admin Sign In</h1>

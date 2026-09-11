@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Menu, X, ArrowUpRight } from 'lucide-react';
+import clsx from 'clsx';
 import { useSiteSettings } from '../../hooks/useSiteSettings.js';
 
 const NAV_LINKS = [
@@ -16,17 +17,30 @@ const NAV_LINKS = [
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { data: settings } = useSiteSettings();
   const agencyName = settings?.branding?.agencyName || 'Your Agency';
 
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-40 border-b border-ink-900/8 bg-white/80 backdrop-blur-md">
+    <header
+      className={clsx(
+        'sticky top-0 z-40 border-b bg-white/80 backdrop-blur-md transition-shadow duration-300',
+        scrolled ? 'border-ink-900/8 shadow-soft' : 'border-transparent'
+      )}
+    >
       <div className="container-page flex h-16 items-center justify-between sm:h-20">
         <Link to="/" className="flex items-center gap-2 text-lg font-extrabold tracking-tight text-ink-900" onClick={() => setOpen(false)}>
           {settings?.branding?.logoUrl ? (
             <img src={settings.branding.logoUrl} alt={agencyName} className="h-8 w-auto" />
           ) : (
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-ink-900 text-sm font-black text-white">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-aurora-gradient text-sm font-black text-white shadow-glow">
               {agencyName.charAt(0)}
             </span>
           )}
@@ -39,12 +53,24 @@ export function Header() {
               key={link.to}
               to={link.to}
               className={({ isActive }) =>
-                `rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-                  isActive ? 'bg-ink-900 text-white' : 'text-ink-900/70 hover:bg-ink-900/5 hover:text-ink-900'
-                }`
+                clsx(
+                  'relative rounded-full px-4 py-2 text-sm font-medium transition-colors',
+                  isActive ? 'text-white' : 'text-ink-900/70 hover:bg-ink-900/5 hover:text-ink-900'
+                )
               }
             >
-              {link.label}
+              {({ isActive }) => (
+                <>
+                  {isActive && (
+                    <motion.span
+                      layoutId="nav-active-pill"
+                      className="absolute inset-0 -z-10 rounded-full bg-aurora-gradient"
+                      transition={{ type: 'spring', bounce: 0.2, duration: 0.5 }}
+                    />
+                  )}
+                  {link.label}
+                </>
+              )}
             </NavLink>
           ))}
         </nav>

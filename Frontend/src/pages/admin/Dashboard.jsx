@@ -44,15 +44,15 @@ export default function Dashboard() {
                 <AreaChart data={enquiryTrend}>
                   <defs>
                     <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#5b8cff" stopOpacity={0.4} />
-                      <stop offset="95%" stopColor="#5b8cff" stopOpacity={0} />
+                      <stop offset="5%" stopColor="#6a5cf5" stopOpacity={0.45} />
+                      <stop offset="95%" stopColor="#a855f7" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#0b122010" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#0b0c1f10" />
                   <XAxis dataKey="date" tick={{ fontSize: 11 }} tickFormatter={(d) => format(new Date(d), 'MMM d')} />
                   <YAxis tick={{ fontSize: 11 }} allowDecimals={false} />
                   <Tooltip labelFormatter={(d) => format(new Date(d), 'PP')} />
-                  <Area type="monotone" dataKey="count" stroke="#5b8cff" fill="url(#colorCount)" strokeWidth={2} />
+                  <Area type="monotone" dataKey="count" stroke="#6a5cf5" fill="url(#colorCount)" strokeWidth={2.5} />
                 </AreaChart>
               </ResponsiveContainer>
             ) : (

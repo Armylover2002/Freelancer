@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
+import { CheckCircle2, AlertTriangle, Archive } from 'lucide-react';
 import { projectsAdminApi } from '../../api/adminApi.js';
 import { useAdminCrud } from '../../hooks/useAdminCrud.js';
 import { AdminToolbar } from '../../components/admin/AdminToolbar.jsx';
@@ -28,7 +29,8 @@ export default function Projects() {
     'projects', projectsAdminApi, { page, limit: 15, search: debounced || undefined }
   );
 
-  const { register, handleSubmit, control, reset, formState: { errors } } = useForm({ defaultValues: EMPTY });
+  const { register, handleSubmit, control, reset, watch, formState: { errors } } = useForm({ defaultValues: EMPTY });
+  const status = watch('status');
 
   useEffect(() => {
     if (modalItem) reset({ ...EMPTY, ...modalItem, seo: modalItem.seo || { title: '', description: '' } });
@@ -93,6 +95,27 @@ export default function Projects() {
       <Modal open={Boolean(modalItem)} onClose={() => setModalItem(null)} title={modalItem?._id ? 'Edit Project' : 'Add Project'} maxWidth="max-w-3xl">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <input type="hidden" {...register('_id')} />
+
+          {status === 'published' ? (
+            <div className="callout-success">
+              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
+              <p>This project is <strong>live</strong> on your public Portfolio page.</p>
+            </div>
+          ) : status === 'archived' ? (
+            <div className="callout border-gray-300 bg-gray-50 text-gray-600">
+              <Archive className="mt-0.5 h-4 w-4 shrink-0" />
+              <p>This project is <strong>archived</strong> and hidden from the public site.</p>
+            </div>
+          ) : (
+            <div className="callout-warning">
+              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+              <p>
+                This project is a <strong>Draft</strong> and will not appear on the public Portfolio or Home page
+                until you set Status to <strong>Published</strong> below.
+              </p>
+            </div>
+          )}
+
           <div className="grid gap-4 sm:grid-cols-2">
             <FormField label="Title" required error={errors.title?.message}>
               <Input {...register('title', { required: 'Title is required' })} />

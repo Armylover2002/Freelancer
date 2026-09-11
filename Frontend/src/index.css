@@ -46,11 +46,22 @@ body {
 }
 
 .btn-accent {
-  @apply btn bg-accent-500 text-white hover:bg-accent-600 shadow-glow hover:-translate-y-0.5;
+  @apply btn relative overflow-hidden text-white shadow-glow hover:-translate-y-0.5 hover:shadow-glow-lg;
+  background-image: linear-gradient(115deg, theme('colors.accent.500'), theme('colors.accent.600') 55%, #9333ea);
+}
+
+.btn-accent::after {
+  content: '';
+  @apply pointer-events-none absolute inset-0 -translate-x-full;
+  background: linear-gradient(115deg, transparent 20%, rgba(255, 255, 255, 0.35) 50%, transparent 80%);
+}
+
+.btn-accent:hover::after {
+  @apply animate-shine;
 }
 
 .btn-outline {
-  @apply btn border border-ink-900/15 text-ink-900 hover:bg-ink-900/5;
+  @apply btn border border-ink-900/15 text-ink-900 hover:border-accent-500/40 hover:bg-accent-500/5;
 }
 
 .btn-ghost {
@@ -75,4 +86,24 @@ body {
 
 .badge {
   @apply inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold;
+}
+
+.text-gradient {
+  @apply bg-aurora-gradient bg-clip-text text-transparent;
+}
+
+.callout {
+  @apply flex items-start gap-3 rounded-xl border px-4 py-3 text-sm leading-relaxed;
+}
+
+.callout-info {
+  @apply callout border-accent-500/20 bg-accent-500/5 text-accent-700;
+}
+
+.callout-warning {
+  @apply callout border-amber-300 bg-amber-50 text-amber-800;
+}
+
+.callout-success {
+  @apply callout border-emerald-300 bg-emerald-50 text-emerald-800;
 }

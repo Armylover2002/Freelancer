@@ -77,15 +77,18 @@ export default function Home() {
     <div>
       {/* HERO */}
       <section className="relative overflow-hidden bg-ink-950 text-white">
-        <div className="pointer-events-none absolute inset-0 opacity-40">
-          <div className="absolute -left-24 top-10 h-72 w-72 rounded-full bg-accent-500/30 blur-3xl animate-float" />
-          <div className="absolute right-0 top-40 h-96 w-96 rounded-full bg-accent-600/20 blur-3xl animate-float" style={{ animationDelay: '2s' }} />
+        <div className="pointer-events-none absolute inset-0 bg-dot-grid bg-[length:22px_22px] opacity-[0.15]" />
+        <div className="pointer-events-none absolute inset-0 opacity-50">
+          <div className="absolute -left-24 top-0 h-80 w-80 rounded-full bg-accent-500/30 blur-3xl animate-float" />
+          <div className="absolute right-[-4rem] top-32 h-96 w-96 rounded-full bg-fuchsia-500/20 blur-3xl animate-float" style={{ animationDelay: '2s' }} />
+          <div className="absolute left-1/3 bottom-[-6rem] h-72 w-72 rounded-full bg-cyan-400/15 blur-3xl animate-float" style={{ animationDelay: '3.5s' }} />
         </div>
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-ink-950 to-transparent" />
 
         <div className="container-page relative section-y">
           <div className="mx-auto max-w-3xl text-center">
             <AnimatedReveal>
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs font-semibold text-white/70">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs font-semibold text-white/70 backdrop-blur">
                 <Sparkles className="h-3.5 w-3.5 text-accent-400" /> {agencyName}
               </span>
             </AnimatedReveal>
@@ -259,7 +262,7 @@ export default function Home() {
       )}
 
       {/* FINAL CTA */}
-      <section className="section-y bg-gradient-to-br from-accent-600 to-ink-900 text-white">
+      <section className="section-y relative overflow-hidden bg-gradient-to-br from-accent-600 via-fuchsia-600 to-ink-950 text-white">
         <div className="container-page text-center">
           <AnimatedReveal>
             <h2 className="text-3xl font-extrabold sm:text-4xl">Ready to build something great?</h2>

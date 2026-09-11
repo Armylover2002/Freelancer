@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { Star } from 'lucide-react';
+import { Star, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { testimonialsAdminApi } from '../../api/adminApi.js';
 import { useAdminCrud } from '../../hooks/useAdminCrud.js';
 import { AdminToolbar } from '../../components/admin/AdminToolbar.jsx';
@@ -50,6 +50,19 @@ export default function Testimonials() {
       <Modal open={Boolean(modalItem)} onClose={() => setModalItem(null)} title={modalItem?._id ? 'Edit Testimonial' : 'Add Testimonial'} maxWidth="max-w-2xl">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <input type="hidden" {...register('_id')} />
+
+          {watch('published') ? (
+            <div className="callout-success">
+              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
+              <p>This testimonial is <strong>live</strong> on your public website.</p>
+            </div>
+          ) : (
+            <div className="callout-warning">
+              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+              <p>This testimonial is <strong>unpublished</strong> and hidden from visitors until you toggle Published below.</p>
+            </div>
+          )}
+
           <FormField label="Photo">
             <Controller name="photo" control={control} render={({ field }) => <ImageUploader value={field.value} onChange={field.onChange} folder="testimonials" />} />
           </FormField>
@@ -69,6 +82,15 @@ export default function Testimonials() {
             </div>
           </FormField>
           <Checkbox label="I confirm this testimonial is genuine and verified with the client." checked={watch('sourceVerified')} onChange={(e) => setValue('sourceVerified', e.target.checked)} />
+          <div className="flex items-center justify-between rounded-xl border border-ink-900/10 px-4 py-3">
+            <div>
+              <p className="text-sm font-semibold text-ink-900">Published</p>
+              <p className="text-xs text-ink-900/45">Turn on to show this testimonial on the public website.</p>
+            </div>
+            <Controller name="published" control={control} render={({ field }) => (
+              <ToggleSwitch checked={field.value} onChange={field.onChange} />
+            )} />
+          </div>
           <div className="flex justify-end gap-2 border-t border-ink-900/8 pt-4">
             <button type="button" onClick={() => setModalItem(null)} className="btn-ghost">Cancel</button>
             <button type="submit" disabled={isSaving} className="btn-accent">{isSaving ? 'Saving...' : 'Save Testimonial'}</button>

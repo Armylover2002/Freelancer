@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { Copy, Loader2, Trash2, Upload } from 'lucide-react';
+import { Copy, Info, Loader2, Trash2, Upload } from 'lucide-react';
 import { mediaAdminApi } from '../../api/adminApi.js';
 import { extractErrorMessage } from '../../api/axiosClient.js';
 import { AdminToolbar } from '../../components/admin/AdminToolbar.jsx';
@@ -54,6 +55,20 @@ export default function Media() {
         onCreate={() => fileInputRef.current?.click()}
         createLabel="Upload"
       />
+
+      <div className="callout-info mb-6">
+        <Info className="mt-0.5 h-4 w-4 shrink-0" />
+        <p>
+          This is a reusable image library stored on Cloudinary — uploading here does <strong>not</strong> put
+          anything on your live website by itself. To make an image public, open a{' '}
+          <Link to="/admin/projects" className="font-semibold underline underline-offset-2">Project</Link>,{' '}
+          <Link to="/admin/team" className="font-semibold underline underline-offset-2">Team member</Link>,{' '}
+          <Link to="/admin/testimonials" className="font-semibold underline underline-offset-2">Testimonial</Link>,
+          or <Link to="/admin/settings" className="font-semibold underline underline-offset-2">Site Settings</Link> (logo)
+          and upload the image directly in that form's image field — or copy a URL from here and use it there.
+        </p>
+      </div>
+
       <input
         ref={fileInputRef}
         type="file"
