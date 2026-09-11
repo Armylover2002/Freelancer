@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { pricingAdminApi } from '../../api/adminApi.js';
+import { applyServerErrors } from '../../api/axiosClient.js';
 import { useAdminCrud } from '../../hooks/useAdminCrud.js';
 import { AdminToolbar } from '../../components/admin/AdminToolbar.jsx';
 import { DataTable, ToggleSwitch } from '../../components/admin/DataTable.jsx';
@@ -15,7 +16,7 @@ export default function Pricing() {
   const [deleteTarget, setDeleteTarget] = useState(null);
 
   const { items, isLoading, create, update, remove, isSaving, isDeleting } = useAdminCrud('pricing', pricingAdminApi, { limit: 50 });
-  const { register, handleSubmit, control, reset, formState: { errors } } = useForm({ defaultValues: EMPTY });
+  const { register, handleSubmit, control, reset, setError, formState: { errors } } = useForm({ defaultValues: EMPTY });
 
   useEffect(() => {
     if (modalItem) reset({ ...EMPTY, ...modalItem });
@@ -27,7 +28,9 @@ export default function Pricing() {
       if (values._id) await update({ id: values._id, payload });
       else await create(payload);
       setModalItem(null);
-    } catch { /* handled */ }
+    } catch (err) {
+      applyServerErrors(err, setError);
+    }
   };
 
   const columns = [

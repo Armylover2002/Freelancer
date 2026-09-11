@@ -9,12 +9,12 @@ import {
   listPublicFaqs,
   getPublicSettings,
 } from '../controllers/public/content.controller.js';
-import { createEnquiry, uploadEnquiryFile } from '../controllers/public/enquiry.controller.js';
+import { createEnquiry, uploadEnquiryFile, trackEnquiries } from '../controllers/public/enquiry.controller.js';
 import { recordAnalyticsEvent } from '../controllers/public/analytics.controller.js';
 import { validate } from '../middleware/validate.js';
 import { createEnquirySchema } from '../validators/enquiry.validator.js';
 import { analyticsEventSchema } from '../validators/analytics.validator.js';
-import { enquiryLimiter, analyticsLimiter } from '../middleware/rateLimiters.js';
+import { enquiryLimiter, analyticsLimiter, trackLimiter } from '../middleware/rateLimiters.js';
 import { uploadBriefFiles } from '../middleware/upload.js';
 
 const router = Router();
@@ -30,6 +30,7 @@ router.get('/settings', getPublicSettings);
 
 router.post('/enquiries', enquiryLimiter, validate(createEnquirySchema), createEnquiry);
 router.post('/enquiries/upload', enquiryLimiter, uploadBriefFiles.single('file'), uploadEnquiryFile);
+router.get('/enquiries/track', trackLimiter, trackEnquiries);
 
 router.post('/analytics/events', analyticsLimiter, validate(analyticsEventSchema), recordAnalyticsEvent);
 

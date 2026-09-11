@@ -8,15 +8,15 @@ import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 
 import { publicApi } from '../../api/publicApi.js';
-import { extractErrorMessage } from '../../api/axiosClient.js';
-import { enquiryFormSchema, STEP_FIELDS, DEFAULT_VALUES, toApiPayload } from '../../utils/enquirySchema.js';
+import { extractErrorMessage, extractErrorDetails } from '../../api/axiosClient.js';
+import { enquiryFormSchema, STEP_FIELDS, DEFAULT_VALUES, toApiPayload, mapBackendPathToField } from '../../utils/enquirySchema.js';
 import {
   PROJECT_TYPES, PAGE_OPTIONS, FEATURE_OPTIONS, DESIGN_STYLES,
   BUDGET_RANGES, TIMELINE_OPTIONS, CONTACT_METHODS, STEP_TITLES,
 } from '../../utils/enquiryOptions.js';
 import { Input, Textarea, FormField, Checkbox } from '../../components/ui/Field.jsx';
 import { AnimatedReveal } from '../../components/ui/AnimatedReveal.jsx';
-import { trackEvent } from '../../hooks/useAnalytics.js';
+import { trackEvent, getEnquirySourceMeta } from '../../hooks/useAnalytics.js';
 import { useDocumentHead } from '../../hooks/useDocumentHead.js';
 
 const STORAGE_KEY = 'agency_enquiry_draft_v1';
@@ -85,7 +85,7 @@ export default function StartProject() {
   const startTracked = useMemo(() => ({ done: false }), []);
 
   const {
-    register, handleSubmit, trigger, watch, setValue, getValues, formState: { errors },
+    register, handleSubmit, trigger, watch, setValue, getValues, setError, formState: { errors },
   } = useForm({
     resolver: zodResolver(enquiryFormSchema),
     mode: 'onTouched',
@@ -157,12 +157,25 @@ export default function StartProject() {
   const onSubmit = async (formValues) => {
     setSubmitting(true);
     try {
-      const payload = toApiPayload(formValues);
+      const payload = { ...toApiPayload(formValues), source: getEnquirySourceMeta() };
       const result = await publicApi.createEnquiry(payload);
       trackEvent('enquiry_submit');
       localStorage.removeItem(STORAGE_KEY);
       setSubmitted(result);
     } catch (err) {
+      const details = extractErrorDetails(err);
+      if (Array.isArray(details) && details.length) {
+        let firstStep = null;
+        details.forEach(({ path, message }) => {
+          const mapped = mapBackendPathToField(path);
+          if (mapped) {
+            setError(mapped.field, { type: 'server', message });
+            if (firstStep === null && mapped.step !== null) firstStep = mapped.step;
+          }
+        });
+        // Jump back to whichever step actually has the problem, so the message is visible.
+        if (firstStep !== null) setStep(firstStep);
+      }
       toast.error(extractErrorMessage(err));
     } finally {
       setSubmitting(false);
@@ -178,7 +191,17 @@ export default function StartProject() {
           </div>
           <h1 className="mt-6 text-2xl font-extrabold text-ink-900">Request received!</h1>
           <p className="mt-3 text-sm leading-relaxed text-ink-900/60">{submitted.message}</p>
-          <Link to="/" className="btn-primary mt-8 inline-flex">Back to Home</Link>
+
+          <p className="mt-4 text-xs text-ink-900/40">
+            You can check its status anytime using the email you just submitted with.
+          </p>
+
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+            <Link to="/" className="btn-primary">Back to Home</Link>
+            <Link to={`/track-request?email=${encodeURIComponent(submitted.email || '')}`} className="btn-outline">
+              Track Your Request
+            </Link>
+          </div>
         </AnimatedReveal>
       </div>
     );
@@ -191,6 +214,12 @@ export default function StartProject() {
           <h1 className="text-3xl font-extrabold text-ink-900 sm:text-4xl">Start Your Project</h1>
           <p className="mt-3 text-ink-900/55">
             Answer a few quick questions so we can understand your requirements and respond with a tailored plan.
+          </p>
+          <p className="mt-2 text-sm text-ink-900/45">
+            Already submitted a request?{' '}
+            <Link to="/track-request" className="font-semibold text-accent-600 underline-offset-2 hover:underline">
+              Track its status
+            </Link>
           </p>
         </AnimatedReveal>
 
@@ -295,12 +324,18 @@ export default function StartProject() {
                         ))}
                       </div>
                     </FormField>
-                    <FormField label="Reference website URLs (optional)">
+                    <FormField label="Reference website URLs (optional)" error={errors.referenceUrls?.message}>
                       <Textarea
                         rows={2}
-                        placeholder="One URL per line"
+                        placeholder="https://example.com (one URL per line)"
                         defaultValue={(values.referenceUrls || []).join('\n')}
-                        onChange={(e) => setValue('referenceUrls', e.target.value.split('\n').map((s) => s.trim()).filter(Boolean))}
+                        onChange={(e) =>
+                          setValue(
+                            'referenceUrls',
+                            e.target.value.split('\n').map((s) => s.trim()).filter(Boolean),
+                            { shouldValidate: true }
+                          )
+                        }
                       />
                     </FormField>
                     <FormField label="Brand assets / logo (optional)">

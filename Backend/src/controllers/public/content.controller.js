@@ -85,6 +85,10 @@ export const getPublicSettings = asyncHandler(async (req, res) => {
     ctaLabels: settings.ctaLabels,
     featureFlags: { maintenanceMode: settings.featureFlags?.maintenanceMode ?? false },
     enquiryConfirmationMessage: settings.enquiryConfirmationMessage,
+    legal: {
+      privacyPolicy: settings.legal?.privacyPolicy || '',
+      termsOfService: settings.legal?.termsOfService || '',
+    },
   };
 
   ok(res, publicSafe);

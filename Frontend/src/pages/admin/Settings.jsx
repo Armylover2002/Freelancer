@@ -3,7 +3,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { settingsAdminApi } from '../../api/adminApi.js';
-import { extractErrorMessage } from '../../api/axiosClient.js';
+import { extractErrorMessage, applyServerErrors } from '../../api/axiosClient.js';
 import { ImageUploader } from '../../components/admin/ImageUploader.jsx';
 import { ToggleSwitch } from '../../components/admin/DataTable.jsx';
 import { PageSpinner } from '../../components/ui/States.jsx';
@@ -22,7 +22,7 @@ function Section({ title, description, children }) {
 export default function Settings() {
   const queryClient = useQueryClient();
   const { data: settings, isLoading } = useQuery({ queryKey: ['admin', 'settings'], queryFn: settingsAdminApi.get });
-  const { register, handleSubmit, control, reset } = useForm();
+  const { register, handleSubmit, control, reset, setError, formState: { errors } } = useForm();
 
   useEffect(() => {
     if (settings) reset(settings);
@@ -35,7 +35,10 @@ export default function Settings() {
       queryClient.invalidateQueries({ queryKey: ['admin', 'settings'] });
       queryClient.invalidateQueries({ queryKey: ['public', 'settings'] });
     },
-    onError: (err) => toast.error(extractErrorMessage(err)),
+    onError: (err) => {
+      toast.error(extractErrorMessage(err));
+      applyServerErrors(err, setError);
+    },
   });
 
   if (isLoading) return <PageSpinner label="Loading settings..." />;
@@ -64,7 +67,7 @@ export default function Settings() {
           </Section>
 
           <Section title="Contact Details">
-            <FormField label="Email"><Input type="email" {...register('contact.email')} /></FormField>
+            <FormField label="Email" error={errors.contact?.email?.message}><Input type="email" {...register('contact.email')} /></FormField>
             <FormField label="Phone"><Input {...register('contact.phone')} /></FormField>
             <FormField label="WhatsApp Number"><Input {...register('contact.whatsapp')} placeholder="919876543210" /></FormField>
             <FormField label="Address"><Textarea rows={2} {...register('contact.address')} /></FormField>
@@ -93,6 +96,15 @@ export default function Settings() {
           <Section title="Enquiry Confirmation Message">
             <FormField label="Shown after a successful project submission">
               <Textarea rows={3} {...register('enquiryConfirmationMessage')} />
+            </FormField>
+          </Section>
+
+          <Section title="Legal Pages" description="Shown on the public /privacy and /terms pages. Leave blank to keep the default policy text.">
+            <FormField label="Privacy Policy">
+              <Textarea rows={8} {...register('legal.privacyPolicy')} placeholder="Leave blank to use the default privacy policy..." />
+            </FormField>
+            <FormField label="Terms of Service">
+              <Textarea rows={8} {...register('legal.termsOfService')} placeholder="Leave blank to use the default terms of service..." />
             </FormField>
           </Section>
 

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { CheckCircle2, AlertTriangle, Archive } from 'lucide-react';
 import { projectsAdminApi } from '../../api/adminApi.js';
+import { applyServerErrors } from '../../api/axiosClient.js';
 import { useAdminCrud } from '../../hooks/useAdminCrud.js';
 import { AdminToolbar } from '../../components/admin/AdminToolbar.jsx';
 import { DataTable, ToggleSwitch } from '../../components/admin/DataTable.jsx';
@@ -29,7 +30,7 @@ export default function Projects() {
     'projects', projectsAdminApi, { page, limit: 15, search: debounced || undefined }
   );
 
-  const { register, handleSubmit, control, reset, watch, formState: { errors } } = useForm({ defaultValues: EMPTY });
+  const { register, handleSubmit, control, reset, watch, setError, formState: { errors } } = useForm({ defaultValues: EMPTY });
   const status = watch('status');
 
   useEffect(() => {
@@ -44,8 +45,9 @@ export default function Projects() {
         await create(values);
       }
       setModalItem(null);
-    } catch {
-      /* toast handled in hook */
+    } catch (err) {
+      // Toast is shown by useAdminCrud; also surface the exact field so it's easy to find and fix.
+      applyServerErrors(err, setError);
     }
   };
 

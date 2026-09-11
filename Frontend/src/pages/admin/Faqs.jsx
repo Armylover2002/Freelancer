@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { faqsAdminApi } from '../../api/adminApi.js';
+import { applyServerErrors } from '../../api/axiosClient.js';
 import { useAdminCrud } from '../../hooks/useAdminCrud.js';
 import { AdminToolbar } from '../../components/admin/AdminToolbar.jsx';
 import { DataTable, ToggleSwitch } from '../../components/admin/DataTable.jsx';
@@ -14,7 +15,7 @@ export default function Faqs() {
   const [deleteTarget, setDeleteTarget] = useState(null);
 
   const { items, isLoading, create, update, remove, isSaving, isDeleting } = useAdminCrud('faqs', faqsAdminApi, { limit: 100 });
-  const { register, handleSubmit, reset, formState: { errors } } = useForm({ defaultValues: EMPTY });
+  const { register, handleSubmit, reset, setError, formState: { errors } } = useForm({ defaultValues: EMPTY });
 
   useEffect(() => {
     if (modalItem) reset({ ...EMPTY, ...modalItem });
@@ -25,7 +26,9 @@ export default function Faqs() {
       if (values._id) await update({ id: values._id, payload: values });
       else await create(values);
       setModalItem(null);
-    } catch { /* handled */ }
+    } catch (err) {
+      applyServerErrors(err, setError);
+    }
   };
 
   const columns = [

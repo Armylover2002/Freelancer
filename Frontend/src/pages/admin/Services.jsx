@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { servicesAdminApi } from '../../api/adminApi.js';
+import { applyServerErrors } from '../../api/axiosClient.js';
 import { useAdminCrud } from '../../hooks/useAdminCrud.js';
 import { AdminToolbar } from '../../components/admin/AdminToolbar.jsx';
 import { DataTable, ToggleSwitch } from '../../components/admin/DataTable.jsx';
@@ -21,7 +22,7 @@ export default function Services() {
     'services', servicesAdminApi, { limit: 50, search: debounced || undefined }
   );
 
-  const { register, handleSubmit, control, reset, formState: { errors } } = useForm({ defaultValues: EMPTY });
+  const { register, handleSubmit, control, reset, setError, formState: { errors } } = useForm({ defaultValues: EMPTY });
 
   useEffect(() => {
     if (modalItem) reset({ ...EMPTY, ...modalItem, startingPrice: modalItem.startingPrice ?? '' });
@@ -33,7 +34,9 @@ export default function Services() {
       if (values._id) await update({ id: values._id, payload });
       else await create(payload);
       setModalItem(null);
-    } catch { /* handled */ }
+    } catch (err) {
+      applyServerErrors(err, setError);
+    }
   };
 
   const columns = [
@@ -60,7 +63,7 @@ export default function Services() {
             <Controller name="features" control={control} render={({ field }) => <TagInput value={field.value} onChange={field.onChange} placeholder="Add a feature..." />} />
           </FormField>
           <div className="grid gap-4 sm:grid-cols-2">
-            <FormField label="Starting Price (₹)"><Input type="number" {...register('startingPrice')} /></FormField>
+            <FormField label="Starting Price (₹)" error={errors.startingPrice?.message}><Input type="number" {...register('startingPrice')} /></FormField>
             <FormField label="Typical Timeline"><Input {...register('timeline')} placeholder="e.g. 2-4 weeks" /></FormField>
           </div>
           <div className="flex justify-end gap-2 border-t border-ink-900/8 pt-4">

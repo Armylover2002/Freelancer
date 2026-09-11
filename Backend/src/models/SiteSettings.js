@@ -49,6 +49,12 @@ const siteSettingsSchema = new mongoose.Schema(
       default:
         "Thanks! Your project request has been received. We'll review your requirements and get back to you soon.",
     },
+    legal: {
+      // Plain text (line breaks preserved on render). Left blank, the public page falls
+      // back to a sensible default policy instead of showing an empty page.
+      privacyPolicy: { type: String, default: '' },
+      termsOfService: { type: String, default: '' },
+    },
   },
   { timestamps: true }
 );

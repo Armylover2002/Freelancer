@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 import {
   ArrowLeft, Mail, Phone, Globe, MessageSquare, Send, Archive, ArchiveRestore,
-  Paperclip, ExternalLink,
+  Paperclip, ExternalLink, HelpCircle, Radar,
 } from 'lucide-react';
 import { enquiriesAdminApi, adminUsersApi } from '../../api/adminApi.js';
 import { extractErrorMessage } from '../../api/axiosClient.js';
@@ -134,6 +134,12 @@ export default function EnquiryDetail() {
                 <p className="mt-1 text-sm text-ink-900/75">{enquiry.business.description}</p>
               </div>
             )}
+            {enquiry.business?.targetCustomers && (
+              <div className="mt-3">
+                <p className="text-xs text-ink-900/40">Target Customers</p>
+                <p className="mt-1 text-sm text-ink-900/75">{enquiry.business.targetCustomers}</p>
+              </div>
+            )}
             {enquiry.business?.painPoint && (
               <div className="mt-3">
                 <p className="text-xs text-ink-900/40">Pain Point</p>
@@ -209,7 +215,40 @@ export default function EnquiryDetail() {
                 <p className="mt-1 whitespace-pre-line text-sm text-ink-900/75">{enquiry.brief}</p>
               </div>
             )}
+            {enquiry.heardFrom && (
+              <div className="mt-4 flex items-start gap-3">
+                <HelpCircle className="mt-0.5 h-4 w-4 shrink-0 text-ink-900/35" />
+                <div>
+                  <p className="text-xs text-ink-900/40">How they heard about us</p>
+                  <p className="mt-1 text-sm font-medium text-ink-900">{enquiry.heardFrom}</p>
+                </div>
+              </div>
+            )}
           </div>
+
+          {/* Source / UTM tracking */}
+          {enquiry.source && Object.values(enquiry.source).some(Boolean) && (
+            <div className="card p-5">
+              <h2 className="flex items-center gap-2 font-bold text-ink-900">
+                <Radar className="h-4 w-4 text-ink-900/40" /> Source & Tracking
+              </h2>
+              <div className="mt-3 grid gap-x-6 gap-y-1 sm:grid-cols-2">
+                <InfoRow icon={Globe} label="UTM Source" value={enquiry.source.utmSource} />
+                <InfoRow icon={Globe} label="UTM Medium" value={enquiry.source.utmMedium} />
+                <InfoRow icon={Globe} label="UTM Campaign" value={enquiry.source.utmCampaign} />
+                <InfoRow icon={Globe} label="UTM Term" value={enquiry.source.utmTerm} />
+                <InfoRow icon={Globe} label="UTM Content" value={enquiry.source.utmContent} />
+                <InfoRow icon={ExternalLink} label="Referrer" value={enquiry.source.referrer} href={enquiry.source.referrer} />
+                <InfoRow icon={Globe} label="Landing Page" value={enquiry.source.landingPage} />
+              </div>
+              {enquiry.source.userAgent && (
+                <div className="mt-3 border-t border-ink-900/8 pt-3">
+                  <p className="text-xs text-ink-900/40">Device / Browser</p>
+                  <p className="mt-1 break-all text-xs text-ink-900/60">{enquiry.source.userAgent}</p>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Notes & activity */}
           <div className="card p-5">

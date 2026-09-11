@@ -3,7 +3,7 @@ import { Enquiry } from '../../models/Enquiry.js';
 import { SiteSettings } from '../../models/SiteSettings.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
 import { ApiError } from '../../utils/ApiError.js';
-import { created } from '../../utils/ApiResponse.js';
+import { created, ok } from '../../utils/ApiResponse.js';
 import { sendEmailSafe } from '../../utils/sendEmail.js';
 import { env } from '../../config/env.js';
 import { uploadBufferToCloudinary, isCloudinaryConfigured } from '../../config/cloudinary.js';
@@ -88,10 +88,60 @@ export const createEnquiry = asyncHandler(async (req, res) => {
 
   created(res, {
     id: enquiry._id,
+    email: enquiry.contact.email,
     message:
       settings?.enquiryConfirmationMessage ||
       "Thanks! Your project request has been received. We'll review your requirements and contact you within 24-48 business hours.",
   });
+});
+
+/**
+ * Lets a visitor look up every request they've submitted using only the email they
+ * submitted it with. Only public-safe fields are returned: no internal admin notes,
+ * no staff names, no assignee/priority/audit data. Rate-limited (see trackLimiter) since
+ * an email-only lookup has no second factor.
+ */
+export const trackEnquiries = asyncHandler(async (req, res) => {
+  const email = String(req.query.email || '').trim().toLowerCase();
+  if (!email) throw ApiError.badRequest('Enter the email you used when submitting your request');
+
+  const enquiries = await Enquiry.find({ 'contact.email': email }).sort({ createdAt: -1 }).lean();
+
+  const results = enquiries.map((enquiry) => {
+    const statusHistory = (enquiry.activity || [])
+      .filter((a) => a.toStatus)
+      .map((a) => ({ status: a.toStatus, date: a.createdAt }));
+
+    return {
+      id: enquiry._id,
+      submittedAt: enquiry.createdAt,
+      status: enquiry.status,
+      statusHistory,
+      contact: {
+        name: enquiry.contact.name,
+        business: enquiry.contact.business,
+        email: enquiry.contact.email,
+        phone: enquiry.contact.phone,
+        country: enquiry.contact.country,
+        preferredContactMethod: enquiry.contact.preferredContactMethod,
+      },
+      business: enquiry.business,
+      projectType: enquiry.projectType,
+      pages: enquiry.pages,
+      features: enquiry.features,
+      design: {
+        style: enquiry.design?.style,
+        referenceUrls: enquiry.design?.referenceUrls,
+        brandAssets: enquiry.design?.brandAssets,
+      },
+      budgetRange: enquiry.budgetRange,
+      timeline: enquiry.timeline,
+      brief: enquiry.brief,
+      heardFrom: enquiry.heardFrom,
+    };
+  });
+
+  ok(res, results);
 });
 
 /**

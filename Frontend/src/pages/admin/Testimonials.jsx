@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Star, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { testimonialsAdminApi } from '../../api/adminApi.js';
+import { applyServerErrors } from '../../api/axiosClient.js';
 import { useAdminCrud } from '../../hooks/useAdminCrud.js';
 import { AdminToolbar } from '../../components/admin/AdminToolbar.jsx';
 import { DataTable, ToggleSwitch } from '../../components/admin/DataTable.jsx';
@@ -16,7 +17,7 @@ export default function Testimonials() {
   const [deleteTarget, setDeleteTarget] = useState(null);
 
   const { items, isLoading, create, update, remove, isSaving, isDeleting } = useAdminCrud('testimonials', testimonialsAdminApi, { limit: 50 });
-  const { register, handleSubmit, control, reset, watch, setValue, formState: { errors } } = useForm({ defaultValues: EMPTY });
+  const { register, handleSubmit, control, reset, watch, setValue, setError, formState: { errors } } = useForm({ defaultValues: EMPTY });
   const rating = watch('rating');
 
   useEffect(() => {
@@ -28,7 +29,9 @@ export default function Testimonials() {
       if (values._id) await update({ id: values._id, payload: values });
       else await create(values);
       setModalItem(null);
-    } catch { /* handled */ }
+    } catch (err) {
+      applyServerErrors(err, setError);
+    }
   };
 
   const columns = [
