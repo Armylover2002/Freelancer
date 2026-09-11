@@ -121,22 +121,22 @@ export function AdminLayout() {
   };
 
   return (
-    <div className="flex min-h-screen bg-surface-muted">
-      <aside className="hidden w-64 shrink-0 bg-gradient-to-b from-ink-950 to-ink-900 lg:block">
+    <div className="flex h-screen overflow-hidden bg-surface-muted">
+      <aside className="hidden w-64 shrink-0 overflow-y-auto bg-gradient-to-b from-ink-950 to-ink-900 lg:block">
         <SidebarContent admin={admin} />
       </aside>
 
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="absolute inset-0 bg-black/50" onClick={() => setMobileOpen(false)} />
-          <aside className="absolute left-0 top-0 h-full w-64 bg-gradient-to-b from-ink-950 to-ink-900">
+          <aside className="absolute left-0 top-0 h-full w-64 overflow-y-auto bg-gradient-to-b from-ink-950 to-ink-900">
             <SidebarContent admin={admin} onNavigate={() => setMobileOpen(false)} />
           </aside>
         </div>
       )}
 
-      <div className="flex flex-1 flex-col">
-        <header className="relative flex h-16 items-center justify-between border-b border-ink-900/8 bg-white px-4 sm:px-6">
+      <div className="flex flex-1 flex-col overflow-hidden">
+        <header className="relative flex h-16 shrink-0 items-center justify-between border-b border-ink-900/8 bg-white px-4 sm:px-6">
           <div className="absolute inset-x-0 top-0 h-0.5 bg-aurora-gradient" />
           <button className="rounded-lg p-2 text-ink-900 lg:hidden" onClick={() => setMobileOpen(true)} aria-label="Open menu">
             <Menu className="h-5 w-5" />
@@ -159,7 +159,7 @@ export function AdminLayout() {
             </button>
           </div>
         </header>
-        <main className="flex-1 p-4 sm:p-6">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6">
           <Outlet />
         </main>
       </div>
