@@ -3,13 +3,14 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Loader2, Lock, ShieldCheck } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Lock, ShieldCheck } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../hooks/useAuth.js';
 import { extractErrorMessage } from '../../api/axiosClient.js';
 import { Input, FormField } from '../../components/ui/Field.jsx';
 import { AnimatedReveal } from '../../components/ui/AnimatedReveal.jsx';
 import { useDocumentHead } from '../../hooks/useDocumentHead.js';
+import { useSiteSettings } from '../../hooks/useSiteSettings.js';
 
 const schema = z.object({
   email: z.string().trim().email('Enter a valid email'),
@@ -23,6 +24,10 @@ export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const [submitting, setSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const { data: settings } = useSiteSettings();
+  const agencyName = settings?.branding?.agencyName || 'Your Agency';
+  const logoUrl = settings?.branding?.logoUrl;
 
   const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(schema) });
 
@@ -52,18 +57,40 @@ export default function Login() {
 
       <AnimatedReveal className="relative w-full max-w-sm">
         <div className="card p-8">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-aurora-gradient text-white shadow-glow">
-            <ShieldCheck className="h-6 w-6" />
-          </div>
+          {logoUrl ? (
+            <img src={logoUrl} alt={agencyName} className="mx-auto h-16 w-16 rounded-2xl bg-ink-900/5 object-contain p-1.5 shadow-glow" />
+          ) : (
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-aurora-gradient text-white shadow-glow">
+              <ShieldCheck className="h-6 w-6" />
+            </div>
+          )}
           <h1 className="mt-5 text-center text-xl font-bold text-ink-900">Admin Sign In</h1>
-          <p className="mt-1 text-center text-sm text-ink-900/45">Access the agency management panel</p>
+          <p className="mt-1 text-center text-sm text-ink-900/45">Access the {agencyName} management panel</p>
 
           <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
             <FormField label="Email" required error={errors.email?.message}>
               <Input type="email" autoComplete="username" {...register('email')} error={errors.email} placeholder="admin@agency.com" />
             </FormField>
             <FormField label="Password" required error={errors.password?.message}>
-              <Input type="password" autoComplete="current-password" {...register('password')} error={errors.password} placeholder="••••••••" />
+              <div className="relative">
+                <Input
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password"
+                  {...register('password')}
+                  error={errors.password}
+                  placeholder="••••••••"
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-900/40 hover:text-ink-900/70"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
             </FormField>
             <button type="submit" disabled={submitting} className="btn-accent w-full">
               {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Lock className="h-4 w-4" />}

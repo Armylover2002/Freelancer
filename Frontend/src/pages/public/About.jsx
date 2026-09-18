@@ -20,7 +20,7 @@ export default function About() {
   const agencyName = settings?.branding?.agencyName || 'Your Agency';
 
   useDocumentHead({
-    title: `About Us - ${agencyName}`,
+    title: 'About Us',
     description: `Learn about ${agencyName} - our story, values and the team behind our work.`,
   });
 

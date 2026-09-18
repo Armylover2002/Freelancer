@@ -29,81 +29,83 @@ body {
   }
 }
 
-.container-page {
-  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
-}
+@layer components {
+  .container-page {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
 
-.section-y {
-  @apply py-16 sm:py-24;
-}
+  .section-y {
+    @apply py-16 sm:py-24;
+  }
 
-.btn {
-  @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500 disabled:opacity-50 disabled:cursor-not-allowed;
-}
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
 
-.btn-primary {
-  @apply btn bg-ink-900 text-white hover:bg-ink-800 shadow-soft hover:-translate-y-0.5;
-}
+  .btn-primary {
+    @apply btn bg-ink-900 text-white hover:bg-ink-800 shadow-soft hover:-translate-y-0.5;
+  }
 
-.btn-accent {
-  @apply btn relative overflow-hidden text-white shadow-glow hover:-translate-y-0.5 hover:shadow-glow-lg;
-  background-image: linear-gradient(115deg, theme('colors.accent.500'), theme('colors.accent.600') 55%, #9333ea);
-}
+  .btn-accent {
+    @apply btn relative overflow-hidden text-white shadow-glow hover:-translate-y-0.5 hover:shadow-glow-lg;
+    background-image: linear-gradient(115deg, theme('colors.accent.500'), theme('colors.accent.600') 55%, #9333ea);
+  }
 
-.btn-accent::after {
-  content: '';
-  @apply pointer-events-none absolute inset-0 -translate-x-full;
-  background: linear-gradient(115deg, transparent 20%, rgba(255, 255, 255, 0.35) 50%, transparent 80%);
-}
+  .btn-accent::after {
+    content: '';
+    @apply pointer-events-none absolute inset-0 -translate-x-full;
+    background: linear-gradient(115deg, transparent 20%, rgba(255, 255, 255, 0.35) 50%, transparent 80%);
+  }
 
-.btn-accent:hover::after {
-  @apply animate-shine;
-}
+  .btn-accent:hover::after {
+    @apply animate-shine;
+  }
 
-.btn-outline {
-  @apply btn border border-ink-900/15 text-ink-900 hover:border-accent-500/40 hover:bg-accent-500/5;
-}
+  .btn-outline {
+    @apply btn border border-ink-900/15 text-ink-900 hover:border-accent-500/40 hover:bg-accent-500/5;
+  }
 
-.btn-ghost {
-  @apply btn text-ink-900 hover:bg-ink-900/5;
-}
+  .btn-ghost {
+    @apply btn text-ink-900 hover:bg-ink-900/5;
+  }
 
-.input-field {
-  @apply w-full rounded-xl border border-ink-900/10 bg-white px-4 py-3 text-sm text-ink-900 placeholder:text-ink-900/40 outline-none transition focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20;
-}
+  .input-field {
+    @apply w-full rounded-xl border border-ink-900/10 bg-white px-4 py-3 text-sm text-ink-900 placeholder:text-ink-900/40 outline-none transition focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20;
+  }
 
-.field-error {
-  @apply mt-1 text-xs font-medium text-red-600;
-}
+  .field-error {
+    @apply mt-1 text-xs font-medium text-red-600;
+  }
 
-.label {
-  @apply mb-1.5 block text-sm font-semibold text-ink-900/80;
-}
+  .label {
+    @apply mb-1.5 block text-sm font-semibold text-ink-900/80;
+  }
 
-.card {
-  @apply rounded-2xl border border-ink-900/10 bg-white shadow-soft;
-}
+  .card {
+    @apply rounded-2xl border border-ink-900/10 bg-white shadow-soft;
+  }
 
-.badge {
-  @apply inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold;
-}
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold;
+  }
 
-.text-gradient {
-  @apply bg-aurora-gradient bg-clip-text text-transparent;
-}
+  .text-gradient {
+    @apply bg-aurora-gradient bg-clip-text text-transparent;
+  }
 
-.callout {
-  @apply flex items-start gap-3 rounded-xl border px-4 py-3 text-sm leading-relaxed;
-}
+  .callout {
+    @apply flex items-start gap-3 rounded-xl border px-4 py-3 text-sm leading-relaxed;
+  }
 
-.callout-info {
-  @apply callout border-accent-500/20 bg-accent-500/5 text-accent-700;
-}
+  .callout-info {
+    @apply callout border-accent-500/20 bg-accent-500/5 text-accent-700;
+  }
 
-.callout-warning {
-  @apply callout border-amber-300 bg-amber-50 text-amber-800;
-}
+  .callout-warning {
+    @apply callout border-amber-300 bg-amber-50 text-amber-800;
+  }
 
-.callout-success {
-  @apply callout border-emerald-300 bg-emerald-50 text-emerald-800;
+  .callout-success {
+    @apply callout border-emerald-300 bg-emerald-50 text-emerald-800;
+  }
 }

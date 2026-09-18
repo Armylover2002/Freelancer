@@ -2,19 +2,19 @@ import mongoose from 'mongoose';
 
 const serviceSchema = new mongoose.Schema(
   {
-    title: { type: String, required: true, trim: true, maxlength: 120 },
+    title: { type: String, required: true, trim: true, maxlength: 200 },
     slug: { type: String, required: true, unique: true, lowercase: true, index: true },
     icon: { type: String, default: '' },
-    shortDescription: { type: String, required: true, maxlength: 200 },
-    description: { type: String, default: '', maxlength: 4000 },
-    features: [{ type: String, trim: true, maxlength: 200 }],
+    shortDescription: { type: String, required: true, maxlength: 500 },
+    description: { type: String, default: '', maxlength: 8000 },
+    features: [{ type: String, trim: true, maxlength: 300 }],
     startingPrice: { type: Number, min: 0 },
-    timeline: { type: String, default: '', maxlength: 120 },
+    timeline: { type: String, default: '', maxlength: 200 },
     order: { type: Number, default: 0 },
     active: { type: Boolean, default: true, index: true },
     seo: {
-      title: { type: String, maxlength: 70 },
-      description: { type: String, maxlength: 160 },
+      title: { type: String, maxlength: 100 },
+      description: { type: String, maxlength: 300 },
     },
   },
   { timestamps: true }

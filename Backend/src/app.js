@@ -29,7 +29,7 @@ app.use(
     origin(origin, callback) {
       // Allow same-origin/non-browser requests (no Origin header) and configured frontend origins only.
       if (!origin || env.clientUrls.includes(origin)) return callback(null, true);
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error(`Not allowed by CORS: ${origin}`));
     },
     credentials: true,
   })

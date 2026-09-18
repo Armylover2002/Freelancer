@@ -68,7 +68,7 @@ export default function Home() {
   const projects = projectsResult?.data || [];
 
   useDocumentHead({
-    title: settings?.seoDefaults?.title || `${agencyName} - Web Development Studio`,
+    title: settings?.seoDefaults?.title || 'Web Development Studio',
     description: settings?.seoDefaults?.description || settings?.branding?.tagline,
     image: settings?.seoDefaults?.ogImage,
   });
@@ -148,11 +148,20 @@ export default function Home() {
           ) : !services?.length ? (
             <EmptyState title="Services coming soon" description="Add your services from the Admin panel to feature them here." />
           ) : (
-            <Stagger className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {services.slice(0, 6).map((s) => (
-                <ServiceCard key={s._id} service={s} />
-              ))}
-            </Stagger>
+            <>
+              <Stagger className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {services.slice(0, 6).map((s) => (
+                  <ServiceCard key={s._id} service={s} />
+                ))}
+              </Stagger>
+              {services.length > 6 && (
+                <div className="mt-10 text-center">
+                  <Link to="/services" className="btn-ghost">
+                    View All Services <ArrowUpRight className="h-4 w-4" />
+                  </Link>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>

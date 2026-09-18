@@ -15,7 +15,7 @@ import { useDebouncedValue } from '../../hooks/useDebouncedValue.js';
 const EMPTY = {
   title: '', businessType: '', category: '', summary: '', problem: '', solution: '',
   features: [], techStack: [], timeline: '', coverImage: undefined, screenshots: [],
-  liveUrl: '', results: '', isFeatured: false, status: 'draft',
+  liveUrl: '', playStoreUrl: '', results: '', isFeatured: false, status: 'draft',
   seo: { title: '', description: '' },
 };
 
@@ -146,6 +146,9 @@ export default function Projects() {
             <FormField label="Timeline"><Input {...register('timeline')} placeholder="e.g. 6 weeks" /></FormField>
             <FormField label="Live URL"><Input {...register('liveUrl')} placeholder="https://" /></FormField>
           </div>
+          <FormField label="Play Store Link (optional)">
+            <Input {...register('playStoreUrl')} placeholder="https://play.google.com/store/apps/details?id=..." />
+          </FormField>
           <FormField label="Results (only genuine, verified results)">
             <Textarea rows={2} {...register('results')} placeholder="e.g. 40% increase in mobile conversions" />
           </FormField>

@@ -9,6 +9,8 @@ import { PageSpinner } from './components/ui/States.jsx';
 import Home from './pages/public/Home.jsx';
 const About = lazy(() => import('./pages/public/About.jsx'));
 const Services = lazy(() => import('./pages/public/Services.jsx'));
+const ServiceDetail = lazy(() => import('./pages/public/ServiceDetail.jsx'));
+const TeamMemberDetail = lazy(() => import('./pages/public/TeamMemberDetail.jsx'));
 const Portfolio = lazy(() => import('./pages/public/Portfolio.jsx'));
 const ProjectDetail = lazy(() => import('./pages/public/ProjectDetail.jsx'));
 const Pricing = lazy(() => import('./pages/public/Pricing.jsx'));
@@ -49,6 +51,8 @@ export default function App() {
           <Route index element={<Home />} />
           <Route path="about" element={<About />} />
           <Route path="services" element={<Services />} />
+          <Route path="services/:slug" element={<ServiceDetail />} />
+          <Route path="team/:slug" element={<TeamMemberDetail />} />
           <Route path="portfolio" element={<Portfolio />} />
           <Route path="portfolio/:slug" element={<ProjectDetail />} />
           <Route path="pricing" element={<Pricing />} />

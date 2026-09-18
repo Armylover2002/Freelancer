@@ -3,8 +3,10 @@ import {
   listPublicProjects,
   getPublicProjectBySlug,
   listPublicServices,
+  getPublicServiceBySlug,
   listPublicPricing,
   listPublicTeam,
+  getPublicTeamMemberBySlug,
   listPublicTestimonials,
   listPublicFaqs,
   getPublicSettings,
@@ -22,8 +24,10 @@ const router = Router();
 router.get('/projects', listPublicProjects);
 router.get('/projects/:slug', getPublicProjectBySlug);
 router.get('/services', listPublicServices);
+router.get('/services/:slug', getPublicServiceBySlug);
 router.get('/pricing', listPublicPricing);
 router.get('/team', listPublicTeam);
+router.get('/team/:slug', getPublicTeamMemberBySlug);
 router.get('/testimonials', listPublicTestimonials);
 router.get('/faqs', listPublicFaqs);
 router.get('/settings', getPublicSettings);

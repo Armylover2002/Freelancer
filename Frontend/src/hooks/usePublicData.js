@@ -4,11 +4,25 @@ import { publicApi } from '../api/publicApi.js';
 export const useServices = () =>
   useQuery({ queryKey: ['public', 'services'], queryFn: publicApi.getServices, staleTime: 60_000 });
 
+export const useService = (slug) =>
+  useQuery({
+    queryKey: ['public', 'service', slug],
+    queryFn: () => publicApi.getServiceBySlug(slug),
+    enabled: Boolean(slug),
+  });
+
 export const usePricing = () =>
   useQuery({ queryKey: ['public', 'pricing'], queryFn: publicApi.getPricing, staleTime: 60_000 });
 
 export const useTeam = () =>
   useQuery({ queryKey: ['public', 'team'], queryFn: publicApi.getTeam, staleTime: 60_000 });
+
+export const useTeamMember = (slug) =>
+  useQuery({
+    queryKey: ['public', 'teamMember', slug],
+    queryFn: () => publicApi.getTeamMemberBySlug(slug),
+    enabled: Boolean(slug),
+  });
 
 export const useTestimonials = () =>
   useQuery({ queryKey: ['public', 'testimonials'], queryFn: publicApi.getTestimonials, staleTime: 60_000 });

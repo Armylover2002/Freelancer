@@ -47,6 +47,12 @@ export const listPublicServices = asyncHandler(async (req, res) => {
   ok(res, services);
 });
 
+export const getPublicServiceBySlug = asyncHandler(async (req, res) => {
+  const service = await Service.findOne({ slug: req.params.slug, active: true }).lean();
+  if (!service) throw ApiError.notFound('Service not found');
+  ok(res, service);
+});
+
 export const listPublicPricing = asyncHandler(async (req, res) => {
   const plans = await PricingPlan.find({ active: true }).sort({ order: 1, startingPrice: 1 }).lean();
   ok(res, plans);
@@ -58,6 +64,14 @@ export const listPublicTeam = asyncHandler(async (req, res) => {
     .sort({ order: 1, createdAt: 1 })
     .lean();
   ok(res, team);
+});
+
+export const getPublicTeamMemberBySlug = asyncHandler(async (req, res) => {
+  const member = await TeamMember.findOne({ slug: req.params.slug, active: true })
+    .select('name slug photo role experienceText specialty technologies bio socials order')
+    .lean();
+  if (!member) throw ApiError.notFound('Team member not found');
+  ok(res, member);
 });
 
 export const listPublicTestimonials = asyncHandler(async (req, res) => {

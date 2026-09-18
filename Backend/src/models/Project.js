@@ -24,6 +24,7 @@ const projectSchema = new mongoose.Schema(
     coverImage: imageSchema,
     screenshots: [imageSchema],
     liveUrl: { type: String, default: '', maxlength: 500 },
+    playStoreUrl: { type: String, default: '', maxlength: 500 },
     results: { type: String, default: '', maxlength: 2000 },
     isFeatured: { type: Boolean, default: false, index: true },
     status: {

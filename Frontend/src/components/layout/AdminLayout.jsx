@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth.js';
 import { useDocumentHead } from '../../hooks/useDocumentHead.js';
+import { useSiteSettings } from '../../hooks/useSiteSettings.js';
 import toast from 'react-hot-toast';
 
 const NAV_SECTIONS = [
@@ -56,14 +57,22 @@ const NAV_SECTIONS = [
 ];
 
 function SidebarContent({ admin, onNavigate }) {
+  const { data: settings } = useSiteSettings();
+  const agencyName = settings?.branding?.agencyName || 'Agency Admin';
+  const logoUrl = settings?.branding?.logoUrl;
+
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center gap-2.5 px-5 py-6">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-aurora-gradient text-sm font-black text-white shadow-glow">
-          A
-        </span>
-        <div>
-          <p className="text-base font-extrabold leading-tight text-white">Agency Admin</p>
+      <div className="flex flex-col items-center gap-2.5 px-5 py-6 text-center">
+        {logoUrl ? (
+          <img src={logoUrl} alt={agencyName} className="h-14 w-14 shrink-0 rounded-xl bg-white/5 object-contain p-1 shadow-glow" />
+        ) : (
+          <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-aurora-gradient text-lg font-black text-white shadow-glow">
+            {agencyName.charAt(0)}
+          </span>
+        )}
+        <div className="min-w-0">
+          <p className="truncate text-base font-extrabold leading-tight text-white">{agencyName}</p>
           <p className="text-xs text-white/40">Content & lead management</p>
         </div>
       </div>

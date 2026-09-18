@@ -8,7 +8,10 @@ export function ServiceCard({ service, detailed = false }) {
   const Icon = getIcon(service.icon);
   return (
     <StaggerItem>
-      <div className="group h-full rounded-2xl border border-ink-900/8 bg-white p-6 shadow-soft transition-all hover:-translate-y-1 hover:border-accent-500/30 hover:shadow-lg">
+      <Link
+        to={service.slug ? `/services/${service.slug}` : '#'}
+        className="group block h-full rounded-2xl border border-ink-900/8 bg-white p-6 shadow-soft transition-all hover:-translate-y-1 hover:border-accent-500/30 hover:shadow-lg"
+      >
         <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-500/10 text-accent-600 transition group-hover:bg-accent-500 group-hover:text-white">
           {/* eslint-disable-next-line react-hooks/static-components -- Icon is a stable reference from a static map, not created per render */}
           <Icon className="h-6 w-6" />
@@ -35,14 +38,11 @@ export function ServiceCard({ service, detailed = false }) {
           ) : (
             <span />
           )}
-          <Link
-            to="/start-project"
-            className="flex items-center gap-1 text-sm font-semibold text-accent-600 transition group-hover:gap-2"
-          >
+          <span className="flex items-center gap-1 text-sm font-semibold text-accent-600 transition group-hover:gap-2">
             Learn More <ArrowRight className="h-4 w-4" />
-          </Link>
+          </span>
         </div>
-      </div>
+      </Link>
     </StaggerItem>
   );
 }

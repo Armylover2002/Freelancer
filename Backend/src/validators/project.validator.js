@@ -19,6 +19,7 @@ export const projectSchema = z.object({
   coverImage: imageRef.optional(),
   screenshots: z.array(imageRef).optional().default([]),
   liveUrl: z.string().max(500).optional().default(''),
+  playStoreUrl: z.string().max(500).optional().default(''),
   results: z.string().max(2000).optional().default(''),
   isFeatured: z.boolean().optional().default(false),
   status: z.enum(['draft', 'published', 'archived']).optional().default('draft'),
