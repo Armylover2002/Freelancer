@@ -44,8 +44,11 @@ export const env = {
     host: process.env.EMAIL_HOST,
     port: Number(process.env.EMAIL_PORT) || 587,
     user: process.env.EMAIL_USER,
-    apiKey: process.env.EMAIL_API_KEY,
-    adminNotificationEmail: process.env.ADMIN_NOTIFICATION_EMAIL,
+    pass: process.env.EMAIL_PASS || process.env.EMAIL_API_KEY,
+    from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
+    // Falls back to the sending mailbox itself so enquiry notifications always have
+    // somewhere to land even if ADMIN_NOTIFICATION_EMAIL is left unset.
+    adminNotificationEmail: process.env.ADMIN_NOTIFICATION_EMAIL || process.env.EMAIL_USER,
   },
 
   rateLimit: {

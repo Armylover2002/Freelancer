@@ -6,13 +6,13 @@ let transporter = null;
 
 function getTransporter() {
   if (transporter) return transporter;
-  if (!env.email.host || !env.email.user || !env.email.apiKey) return null;
+  if (!env.email.host || !env.email.user || !env.email.pass) return null;
 
   transporter = nodemailer.createTransport({
     host: env.email.host,
     port: env.email.port,
     secure: env.email.port === 465,
-    auth: { user: env.email.user, pass: env.email.apiKey },
+    auth: { user: env.email.user, pass: env.email.pass },
   });
   return transporter;
 }
@@ -30,7 +30,7 @@ export async function sendEmailSafe({ to, subject, html, text }) {
 
   try {
     const info = await t.sendMail({
-      from: env.email.user,
+      from: env.email.from,
       to,
       subject,
       html,
