@@ -5,6 +5,7 @@ import { applyServerErrors } from '../../api/axiosClient.js';
 import { useAdminCrud } from '../../hooks/useAdminCrud.js';
 import { AdminToolbar } from '../../components/admin/AdminToolbar.jsx';
 import { DataTable, ToggleSwitch } from '../../components/admin/DataTable.jsx';
+import { SOCIALS } from '../../components/ui/socials.js';
 import { ImageUploader } from '../../components/admin/ImageUploader.jsx';
 import { TagInput } from '../../components/admin/TagInput.jsx';
 import { Modal, ConfirmDialog } from '../../components/ui/Modal.jsx';
@@ -69,8 +70,11 @@ export default function Team() {
           </FormField>
           <FormField label="Bio"><Textarea rows={3} {...register('bio')} /></FormField>
           <div className="grid gap-4 sm:grid-cols-2">
-            <FormField label="LinkedIn"><Input {...register('socials.linkedin')} /></FormField>
-            <FormField label="GitHub"><Input {...register('socials.github')} /></FormField>
+            {Object.entries(SOCIALS).map(([key, { label, Icon, color }]) => (
+              <FormField key={key} label={<span className="inline-flex items-center gap-1.5"><Icon className="h-4 w-4" style={{ color }} />{label}</span>}>
+                <Input placeholder={`${label} profile URL`} {...register(`socials.${key}`)} />
+              </FormField>
+            ))}
           </div>
           <div className="flex justify-end gap-2 border-t border-ink-900/8 pt-4">
             <button type="button" onClick={() => setModalItem(null)} className="btn-ghost">Cancel</button>

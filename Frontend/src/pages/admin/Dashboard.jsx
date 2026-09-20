@@ -8,6 +8,7 @@ import { PageSpinner, ErrorState, EmptyState } from '../../components/ui/States.
 import { StatusBadge } from '../../components/ui/StatusBadge.jsx';
 import { STATUS_LABELS } from '../../utils/enquiryStatus.js';
 import { format } from 'date-fns';
+import { useAuth } from '../../hooks/useAuth.js';
 
 export default function Dashboard() {
   const { data, isLoading, isError } = useQuery({
@@ -16,6 +17,8 @@ export default function Dashboard() {
     refetchInterval: 60_000,
   });
 
+  const { admin } = useAuth();
+
   if (isLoading) return <PageSpinner label="Loading dashboard..." />;
   if (isError) return <ErrorState title="Couldn't load dashboard" />;
 
@@ -23,9 +26,17 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-ink-900">Dashboard</h1>
-        <p className="mt-1 text-sm text-ink-900/50">Overview of leads, traffic and content performance.</p>
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-ink-950 via-ink-800 to-accent-700 p-6 text-white shadow-soft sm:p-8">
+        <div className="pointer-events-none absolute -right-10 -top-10 h-48 w-48 rounded-full bg-fuchsia-500/30 blur-3xl" />
+        <h1 className="relative text-2xl font-extrabold tracking-tight sm:text-3xl">
+          {new Date().getHours() < 12 ? 'Good morning' : new Date().getHours() < 18 ? 'Good afternoon' : 'Good evening'}, {admin?.name?.split(' ')[0] || 'Admin'} 👋
+        </h1>
+        <p className="relative mt-1.5 text-sm text-white/70">Here&apos;s an overview of your leads, traffic and content performance.</p>
+        <div className="relative mt-5 flex flex-wrap gap-2">
+          {[['/admin/projects', 'Add project'], ['/admin/testimonials', 'Add testimonial'], ['/admin/team', 'Add team member'], ['/admin/enquiries', 'View enquiries']].map(([to, label]) => (
+            <Link key={to} to={to} className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold text-white backdrop-blur transition hover:bg-white/20 sm:text-sm">{label}</Link>
+          ))}
+        </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

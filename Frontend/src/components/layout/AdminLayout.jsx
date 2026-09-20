@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   Inbox,
@@ -16,6 +16,8 @@ import {
   LogOut,
   Menu,
   UserCircle2,
+  ExternalLink,
+  X,
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth.js';
 import { useDocumentHead } from '../../hooks/useDocumentHead.js';
@@ -55,6 +57,12 @@ const NAV_SECTIONS = [
     ],
   },
 ];
+
+const flatNav = NAV_SECTIONS.flatMap((s) => s.items);
+const pageTitleFor = (pathname) => {
+  const match = flatNav.find((i) => pathname === i.to || pathname.startsWith(`${i.to}/`));
+  return match?.label || 'Admin';
+};
 
 function SidebarContent({ admin, onNavigate }) {
   const { data: settings } = useSiteSettings();
@@ -103,7 +111,7 @@ function SidebarContent({ admin, onNavigate }) {
                         {isActive && (
                           <span className="absolute left-0 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-aurora-gradient" />
                         )}
-                        <item.icon className={`h-4.5 w-4.5 shrink-0 ${isActive ? 'text-accent-300' : ''}`} />
+                        <item.icon className={`h-[18px] w-[18px] shrink-0 ${isActive ? 'text-accent-300' : ''}`} />
                         {item.label}
                       </>
                     )}
@@ -113,6 +121,16 @@ function SidebarContent({ admin, onNavigate }) {
           </div>
         ))}
       </nav>
+      <div className="border-t border-white/10 p-3">
+        <a
+          href="/"
+          target="_blank"
+          rel="noreferrer"
+          className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-white/55 transition hover:bg-white/5 hover:text-white"
+        >
+          <ExternalLink className="h-4 w-4" /> View website
+        </a>
+      </div>
     </div>
   );
 }
@@ -122,6 +140,7 @@ export function AdminLayout() {
   const { admin, logout } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const handleLogout = async () => {
     await logout();
@@ -137,8 +156,11 @@ export function AdminLayout() {
 
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setMobileOpen(false)} />
-          <aside className="absolute left-0 top-0 h-full w-64 overflow-y-auto bg-gradient-to-b from-ink-950 to-ink-900">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
+          <aside className="absolute left-0 top-0 h-full w-72 max-w-[85vw] overflow-y-auto bg-gradient-to-b from-ink-950 to-ink-900 shadow-2xl">
+            <button onClick={() => setMobileOpen(false)} className="absolute right-3 top-3 rounded-full p-2 text-white/60 hover:bg-white/10 hover:text-white" aria-label="Close menu">
+              <X className="h-5 w-5" />
+            </button>
             <SidebarContent admin={admin} onNavigate={() => setMobileOpen(false)} />
           </aside>
         </div>
@@ -147,12 +169,12 @@ export function AdminLayout() {
       <div className="flex flex-1 flex-col overflow-hidden">
         <header className="relative flex h-16 shrink-0 items-center justify-between border-b border-ink-900/8 bg-white px-4 sm:px-6">
           <div className="absolute inset-x-0 top-0 h-0.5 bg-aurora-gradient" />
-          <button className="rounded-lg p-2 text-ink-900 lg:hidden" onClick={() => setMobileOpen(true)} aria-label="Open menu">
+          <button className="-ml-1 rounded-lg p-2 text-ink-900 hover:bg-ink-900/5 lg:hidden" onClick={() => setMobileOpen(true)} aria-label="Open menu">
             <Menu className="h-5 w-5" />
           </button>
-          <div className="hidden lg:block" />
-          <div className="flex items-center gap-3">
-            <div className="text-right">
+          <h2 className="ml-1 truncate text-base font-bold text-ink-900 sm:text-lg">{pageTitleFor(pathname)}</h2>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="hidden text-right sm:block">
               <p className="text-sm font-semibold text-ink-900">{admin?.name}</p>
               <p className="text-xs capitalize text-ink-900/45">{admin?.role}</p>
             </div>
@@ -168,8 +190,10 @@ export function AdminLayout() {
             </button>
           </div>
         </header>
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6">
-          <Outlet />
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+          <div className="mx-auto w-full max-w-7xl">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>
