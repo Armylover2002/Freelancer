@@ -14,7 +14,7 @@ import { TestimonialCard } from '../../components/sections/TestimonialCard.jsx';
 import { Skeleton, EmptyState } from '../../components/ui/States.jsx';
 import { trackEvent } from '../../hooks/useAnalytics.js';
 import { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, CheckCircle2 } from 'lucide-react';
 import { useDocumentHead } from '../../hooks/useDocumentHead.js';
 
 const TRUST_POINTS = [
@@ -85,7 +85,7 @@ export default function Home() {
         </div>
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-ink-950 to-transparent" />
 
-        <div className="container-page relative section-y">
+        <div className="container-page relative py-16 sm:py-24 lg:py-32">
           <div className="mx-auto max-w-3xl text-center">
             <AnimatedReveal>
               <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs font-semibold text-white/70 backdrop-blur">
@@ -93,7 +93,7 @@ export default function Home() {
               </span>
             </AnimatedReveal>
             <AnimatedReveal delay={0.05}>
-              <h1 className="mt-6 text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+              <h1 className="mt-6 text-[2rem] font-extrabold leading-[1.15] tracking-tight sm:text-5xl lg:text-6xl">
                 {settings?.branding?.tagline || 'We design and build software that grows your business.'}
               </h1>
             </AnimatedReveal>
@@ -117,6 +117,13 @@ export default function Home() {
                 </Link>
               </div>
             </AnimatedReveal>
+            <AnimatedReveal delay={0.2}>
+              <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-medium text-white/50 sm:text-sm">
+                {['Direct developer contact', 'Transparent pricing', 'Post-launch support'].map((t) => (
+                  <span key={t} className="inline-flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4 text-accent-400" />{t}</span>
+                ))}
+              </div>
+            </AnimatedReveal>
           </div>
         </div>
       </section>
@@ -124,11 +131,11 @@ export default function Home() {
       {/* TRUST STRIP */}
       <section className="border-b border-ink-900/8 bg-white">
         <div className="container-page">
-          <Stagger className="grid grid-cols-2 gap-6 py-8 sm:grid-cols-3 lg:grid-cols-6">
+          <Stagger className="grid grid-cols-2 gap-x-4 gap-y-6 py-8 sm:grid-cols-3 lg:grid-cols-6">
             {TRUST_POINTS.map((t) => (
-              <StaggerItem key={t.label} className="flex flex-col items-center gap-2 text-center">
-                <t.icon className="h-6 w-6 text-accent-500" />
-                <span className="text-xs font-semibold text-ink-900/70">{t.label}</span>
+              <StaggerItem key={t.label} className="flex flex-col items-center gap-2.5 text-center">
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-500/10 text-accent-600"><t.icon className="h-5 w-5" /></span>
+                <span className="text-xs font-semibold text-ink-900/70 sm:text-sm">{t.label}</span>
               </StaggerItem>
             ))}
           </Stagger>
@@ -142,7 +149,7 @@ export default function Home() {
           title="Services built around your growth"
           description="From marketing sites to full-scale web applications - we cover the full stack of your digital presence."
         />
-        <div className="mt-12">
+        <div className="mt-10 sm:mt-12">
           {servicesLoading ? (
             <HomeSkeleton />
           ) : !services?.length ? (
@@ -170,7 +177,7 @@ export default function Home() {
       <section className="section-y bg-white">
         <div className="container-page">
           <SectionHeading eyebrow="Selected Work" title="Real projects, real results" />
-          <div className="mt-12">
+          <div className="mt-10 sm:mt-12">
             {projectsLoading ? (
               <HomeSkeleton />
             ) : !projects.length ? (
@@ -196,11 +203,12 @@ export default function Home() {
       {/* WHY US */}
       <section className="section-y container-page">
         <SectionHeading eyebrow="Why Choose Us" title="A studio that works like a partner, not a vendor" />
-        <Stagger className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <Stagger className="mt-10 grid sm:mt-12 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {WHY_US.map((item) => (
-            <StaggerItem key={item.title} className="rounded-2xl border border-ink-900/8 bg-white p-6 shadow-soft">
-              <h3 className="font-bold text-ink-900">{item.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-ink-900/55">{item.desc}</p>
+            <StaggerItem key={item.title} className="group rounded-2xl border border-ink-900/8 bg-white p-6 shadow-soft transition duration-300 hover:-translate-y-1 hover:border-accent-500/30 hover:shadow-xl hover:shadow-accent-500/10 sm:p-7">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-500/10 text-accent-600 transition group-hover:bg-aurora-gradient group-hover:text-white"><CheckCircle2 className="h-5 w-5" /></span>
+              <h3 className="mt-4 font-bold text-ink-900">{item.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-ink-900/60">{item.desc}</p>
             </StaggerItem>
           ))}
         </Stagger>
@@ -214,13 +222,13 @@ export default function Home() {
             title="From idea to launch, step by step"
             className="[&_h2]:text-white [&_p]:text-white/55"
           />
-          <Stagger className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <Stagger className="mt-10 grid sm:mt-12 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {PROCESS_STEPS.map((step, i) => (
-              <StaggerItem key={step.title} className="relative rounded-2xl border border-white/10 bg-white/5 p-5">
+              <StaggerItem key={step.title} className="relative rounded-2xl border border-white/10 bg-white/5 p-5 transition duration-300 hover:-translate-y-1 hover:border-accent-400/40 hover:bg-white/[0.08] sm:p-6">
                 <span className="absolute right-4 top-4 text-3xl font-black text-white/10">{String(i + 1).padStart(2, '0')}</span>
-                <step.icon className="h-6 w-6 text-accent-400" />
-                <h3 className="mt-3 font-bold">{step.title}</h3>
-                <p className="mt-1.5 text-sm text-white/50">{step.desc}</p>
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-500/20 text-accent-300"><step.icon className="h-5 w-5" /></span>
+                <h3 className="mt-4 font-bold">{step.title}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-white/55">{step.desc}</p>
               </StaggerItem>
             ))}
           </Stagger>
@@ -231,7 +239,7 @@ export default function Home() {
       {!teamLoading && team?.length > 0 && (
         <section className="section-y container-page">
           <SectionHeading eyebrow="Our Team" title="The people behind your product" />
-          <Stagger className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <Stagger className="mt-10 grid sm:mt-12 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {team.slice(0, 4).map((m) => (
               <TeamCard key={m._id} member={m} />
             ))}
@@ -244,7 +252,7 @@ export default function Home() {
         <section className="section-y bg-white">
           <div className="container-page">
             <SectionHeading eyebrow="Client Feedback" title="What our clients say" />
-            <Stagger className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <Stagger className="mt-10 grid sm:mt-12 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {testimonials.slice(0, 3).map((t) => (
                 <TestimonialCard key={t._id} testimonial={t} />
               ))}
@@ -272,16 +280,18 @@ export default function Home() {
 
       {/* FINAL CTA */}
       <section className="section-y relative overflow-hidden bg-gradient-to-br from-accent-600 via-fuchsia-600 to-ink-950 text-white">
-        <div className="container-page text-center">
+        <div className="pointer-events-none absolute inset-0 bg-dot-grid bg-[length:22px_22px] opacity-[0.15]" />
+        <div className="pointer-events-none absolute -left-16 top-0 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
+        <div className="container-page relative text-center">
           <AnimatedReveal>
-            <h2 className="text-3xl font-extrabold sm:text-4xl">Ready to build something great?</h2>
+            <h2 className="text-2xl font-extrabold sm:text-4xl">Ready to build something great?</h2>
             <p className="mx-auto mt-4 max-w-xl text-white/70">
               Tell us about your project - we'll get back to you within 24-48 business hours with next steps.
             </p>
             <Link
               to="/start-project"
               onClick={() => trackEvent('enquiry_start', { meta: { from: 'final_cta' } })}
-              className="btn mt-8 bg-white text-ink-900 hover:bg-white/90"
+              className="btn mt-8 w-full bg-white text-ink-900 shadow-lg hover:bg-white/90 sm:w-auto"
             >
               {settings?.ctaLabels?.primary || 'Start Your Project'} <ArrowUpRight className="h-4 w-4" />
             </Link>
@@ -295,14 +305,14 @@ export default function Home() {
 function FaqAccordionItem({ faq }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="overflow-hidden rounded-xl border border-ink-900/8 bg-white">
+    <div className={`overflow-hidden rounded-xl border bg-white transition ${open ? "border-accent-500/30 shadow-soft" : "border-ink-900/8"}`}>
       <button
         onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-center justify-between px-5 py-4 text-left"
+        className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
         aria-expanded={open}
       >
         <span className="text-sm font-semibold text-ink-900">{faq.question}</span>
-        <ChevronDown className={`h-4 w-4 shrink-0 text-ink-900/40 transition-transform ${open ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`h-4 w-4 shrink-0 text-accent-500 transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
       {open && <p className="px-5 pb-4 text-sm leading-relaxed text-ink-900/55">{faq.answer}</p>}
     </div>

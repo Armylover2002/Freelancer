@@ -1,5 +1,6 @@
 import { useSiteSettings } from '../../hooks/useSiteSettings.js';
 import { useDocumentHead } from '../../hooks/useDocumentHead.js';
+import { PageHero } from '../../components/ui/PageHero.jsx';
 import { LegalContent } from '../../components/ui/LegalContent.jsx';
 
 export default function Terms() {
@@ -11,23 +12,24 @@ export default function Terms() {
 
   if (customTerms) {
     return (
-      <div className="section-y container-page">
+      <div>
+<PageHero eyebrow="Legal" title="Terms of Service" description={`Last updated: ${new Date().toLocaleDateString(undefined, { dateStyle: 'long' })}`} />
+<div className="container-page py-12 sm:py-16">
         <div className="mx-auto max-w-3xl">
-          <h1 className="text-3xl font-extrabold text-ink-900">Terms of Service</h1>
-          <p className="mt-2 text-sm text-ink-900/45">Last updated: {new Date().toLocaleDateString()}</p>
-          <div className="mt-8">
+          <div className="">
             <LegalContent text={customTerms} />
           </div>
         </div>
+      </div>
       </div>
     );
   }
 
   return (
-    <div className="section-y container-page">
+    <div>
+<PageHero eyebrow="Legal" title="Terms of Service" description={`Last updated: ${new Date().toLocaleDateString(undefined, { dateStyle: 'long' })}`} />
+<div className="container-page py-12 sm:py-16">
       <div className="mx-auto max-w-3xl">
-        <h1 className="text-3xl font-extrabold text-ink-900">Terms of Service</h1>
-        <p className="mt-2 text-sm text-ink-900/45">Last updated: {new Date().toLocaleDateString()}</p>
 
         <div className="mt-8 space-y-6 text-sm leading-relaxed text-ink-900/70">
           <p>These terms govern your use of the {agencyName} website and the submission of project enquiries through it.</p>
@@ -74,6 +76,7 @@ export default function Terms() {
           </section>
         </div>
       </div>
+    </div>
     </div>
   );
 }

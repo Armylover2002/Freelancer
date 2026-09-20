@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { PageHero } from '../../components/ui/PageHero.jsx';
 import { ChevronDown, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useFaqs } from '../../hooks/usePublicData.js';
@@ -49,12 +50,7 @@ export default function Faq() {
 
   return (
     <div>
-      <section className="bg-ink-950 text-white section-y">
-        <div className="container-page text-center">
-          <span className="badge bg-white/10 text-white/70">FAQ</span>
-          <h1 className="mt-5 text-4xl font-extrabold sm:text-5xl">Frequently asked questions</h1>
-        </div>
-      </section>
+      <PageHero eyebrow="FAQ" title="Frequently asked questions" description="Quick answers to what clients ask us most. Can't find yours? Just get in touch." />
 
       <section className="section-y container-page">
         <div className="mx-auto max-w-3xl">

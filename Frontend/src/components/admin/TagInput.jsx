@@ -5,8 +5,11 @@ export function TagInput({ value = [], onChange, placeholder = 'Type and press E
   const [draft, setDraft] = useState('');
 
   const commit = () => {
-    const v = draft.trim();
-    if (v && !value.includes(v)) onChange([...value, v]);
+    // Pasted lists (comma or newline separated) become separate tags instead of one giant tag.
+    const parts = draft.split(/[,\n]/).map((t) => t.trim()).filter(Boolean);
+    const next = [...value];
+    parts.forEach((t) => { if (!next.includes(t)) next.push(t); });
+    if (next.length !== value.length) onChange(next);
     setDraft('');
   };
 

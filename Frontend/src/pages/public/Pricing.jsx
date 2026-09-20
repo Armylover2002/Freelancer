@@ -1,4 +1,5 @@
 import { usePricing } from '../../hooks/usePublicData.js';
+import { PageHero } from '../../components/ui/PageHero.jsx';
 import { Stagger } from '../../components/ui/AnimatedReveal.jsx';
 import { PricingCard } from '../../components/sections/PricingCard.jsx';
 import { EmptyState, Skeleton } from '../../components/ui/States.jsx';
@@ -14,15 +15,7 @@ export default function Pricing() {
 
   return (
     <div>
-      <section className="bg-ink-950 text-white section-y">
-        <div className="container-page text-center">
-          <span className="badge bg-white/10 text-white/70">Pricing</span>
-          <h1 className="mt-5 text-4xl font-extrabold sm:text-5xl">Transparent starting prices</h1>
-          <p className="mx-auto mt-5 max-w-2xl text-white/60">
-            Every project is scoped individually. These are realistic starting points to help you plan.
-          </p>
-        </div>
-      </section>
+      <PageHero eyebrow="Pricing" title="Transparent starting prices" description="Every project is scoped individually. These are realistic starting points to help you plan." />
 
       <section className="section-y container-page">
         {isLoading ? (

@@ -28,7 +28,8 @@ export default function Testimonials() {
     try {
       // Use the modal's own item id (not a form field) so a stale hidden _id can never
       // turn "Add" into an overwrite of a previously edited testimonial.
-      const { _id, createdAt, updatedAt, __v, ...payload } = values;
+      const payload = { ...values };
+      ['_id', 'createdAt', 'updatedAt', '__v'].forEach((k) => delete payload[k]);
       const id = modalItem?._id;
       if (id) await update({ id, payload });
       else await create(payload);

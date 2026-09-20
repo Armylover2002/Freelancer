@@ -1,10 +1,9 @@
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, ArrowUpRight, Check } from 'lucide-react';
+import { PageHero } from '../../components/ui/PageHero.jsx';
+import { ArrowUpRight, Check } from 'lucide-react';
 import { useService } from '../../hooks/usePublicData.js';
-import { AnimatedReveal } from '../../components/ui/AnimatedReveal.jsx';
 import { PageSpinner, ErrorState } from '../../components/ui/States.jsx';
 import { useDocumentHead } from '../../hooks/useDocumentHead.js';
-import { getIcon } from '../../utils/iconMap.js';
 import NotFound from './NotFound.jsx';
 
 export default function ServiceDetail() {
@@ -23,47 +22,40 @@ export default function ServiceDetail() {
   }
   if (!service) return <NotFound />;
 
-  // getIcon looks up a stable component reference from a static map - not a new component definition per render.
-  const Icon = getIcon(service.icon);
-
   return (
     <div>
-      <section className="bg-ink-950 text-white section-y !pb-10">
-        <div className="container-page">
-          <Link to="/services" className="inline-flex items-center gap-1.5 text-sm text-white/60 hover:text-white">
-            <ArrowLeft className="h-4 w-4" /> Back to Services
-          </Link>
-          <AnimatedReveal>
-            <div className="mt-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-white">
-              {/* eslint-disable-next-line react-hooks/static-components -- Icon is a stable reference from a static map, not created per render */}
-              <Icon className="h-7 w-7" />
-            </div>
-            <h1 className="mt-4 text-3xl font-extrabold sm:text-5xl">{service.title}</h1>
-            <p className="mt-4 max-w-2xl text-white/60">{service.shortDescription}</p>
-            {service.startingPrice ? (
-              <p className="mt-4 text-sm font-semibold text-white/80">
-                Starting from ₹{service.startingPrice.toLocaleString('en-IN')}
-              </p>
-            ) : null}
-          </AnimatedReveal>
+      <PageHero
+        align="left"
+        eyebrow="Service"
+        crumbs={[{ label: 'Services', to: '/services' }, { label: service.title }]}
+        title={service.title}
+        description={service.shortDescription}
+      >
+        <div className="flex flex-wrap items-center gap-3">
+          <Link to="/start-project" className="btn-accent w-full sm:w-auto">Get a quote <ArrowUpRight className="h-4 w-4" /></Link>
+          {service.startingPrice ? (
+            <span className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-white/80">
+              From ₹{service.startingPrice.toLocaleString('en-IN')}
+            </span>
+          ) : null}
         </div>
-      </section>
+      </PageHero>
 
-      <section className="section-y container-page">
-        <div className="grid gap-10 lg:grid-cols-3">
-          <div className="space-y-10 lg:col-span-2">
+      <section className="container-page py-12 sm:py-16">
+        <div className="grid items-start gap-8 lg:grid-cols-3">
+          <div className="space-y-6 lg:col-span-2">
             {service.description && (
-              <div>
-                <h2 className="text-xl font-bold text-ink-900">Overview</h2>
+              <div className="rounded-2xl border border-ink-900/8 bg-white p-6 shadow-soft sm:p-8">
+                <h2 className="flex items-center gap-2 text-xl font-bold text-ink-900"><span className="h-6 w-1.5 rounded-full bg-accent-500" />Overview</h2>
                 <p className="mt-3 whitespace-pre-line leading-relaxed text-ink-900/65">{service.description}</p>
               </div>
             )}
             {service.features?.length > 0 && (
-              <div>
-                <h2 className="text-xl font-bold text-ink-900">What's Included</h2>
-                <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+              <div className="rounded-2xl border border-ink-900/8 bg-white p-6 shadow-soft sm:p-8">
+                <h2 className="flex items-center gap-2 text-xl font-bold text-ink-900"><span className="h-6 w-1.5 rounded-full bg-accent-500" />What&apos;s Included</h2>
+                <ul className="mt-4 grid gap-3 sm:grid-cols-2">
                   {service.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2 rounded-lg bg-white px-4 py-2.5 text-sm text-ink-900/70 shadow-soft">
+                    <li key={f} className="flex items-start gap-2.5 rounded-xl bg-accent-500/[0.05] px-4 py-3 text-sm text-ink-900/75">
                       <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent-500" />
                       {f}
                     </li>
@@ -73,7 +65,7 @@ export default function ServiceDetail() {
             )}
           </div>
 
-          <aside className="space-y-6">
+          <aside className="space-y-6 lg:sticky lg:top-28">
             <div className="card p-6">
               <h3 className="font-bold text-ink-900">Service Details</h3>
               <dl className="mt-4 space-y-3 text-sm">
@@ -85,10 +77,10 @@ export default function ServiceDetail() {
                 ) : null}
               </dl>
             </div>
-            <div className="card bg-ink-900 p-6 text-white">
+            <div className="rounded-2xl bg-gradient-to-br from-accent-600 to-fuchsia-600 p-6 text-white shadow-lg">
               <h3 className="font-bold">Interested in this service?</h3>
-              <p className="mt-2 text-sm text-white/60">Tell us about your project and we'll get back to you soon.</p>
-              <Link to="/start-project" className="btn-accent mt-4 w-full">
+              <p className="mt-2 text-sm text-white/80">Tell us about your project and we'll get back to you soon.</p>
+              <Link to="/start-project" className="btn mt-5 w-full bg-white text-ink-900 hover:bg-white/90">
                 Start Your Project <ArrowUpRight className="h-4 w-4" />
               </Link>
             </div>

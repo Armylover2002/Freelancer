@@ -9,7 +9,7 @@ export const teamMemberSchema = z.object({
   role: z.string().trim().min(2).max(200),
   experienceText: z.string().max(300).optional().default(''),
   specialty: z.string().max(300).optional().default(''),
-  technologies: z.array(z.string().max(100)).optional().default([]),
+  technologies: z.array(z.string()).optional().default([]),
   bio: z.string().max(5000).optional().default(''),
   projectIds: z.array(z.string()).optional().default([]),
   socials: z

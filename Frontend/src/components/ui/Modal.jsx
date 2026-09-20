@@ -18,7 +18,7 @@ export function Modal({ open, onClose, title, children, maxWidth = 'max-w-lg' })
   return createPortal(
     <AnimatePresence>
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-4">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -27,16 +27,16 @@ export function Modal({ open, onClose, title, children, maxWidth = 'max-w-lg' })
             onClick={onClose}
           />
           <motion.div
-            initial={{ opacity: 0, y: 16, scale: 0.98 }}
+            initial={{ opacity: 0, y: 40, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.98 }}
             transition={{ duration: 0.2 }}
             role="dialog"
             aria-modal="true"
             aria-label={title}
-            className={`relative z-10 w-full ${maxWidth} max-h-[85vh] overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl`}
+            className={`relative z-10 flex max-h-[92vh] w-full flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl sm:max-h-[88vh] sm:rounded-2xl ${maxWidth}`}
           >
-            <div className="mb-4 flex items-center justify-between">
+            <div className="flex shrink-0 items-center justify-between border-b border-ink-900/8 px-5 py-4 sm:px-6">
               <h3 className="text-lg font-bold text-ink-900">{title}</h3>
               <button
                 onClick={onClose}
@@ -46,7 +46,7 @@ export function Modal({ open, onClose, title, children, maxWidth = 'max-w-lg' })
                 <X className="h-5 w-5" />
               </button>
             </div>
-            {children}
+            <div className="overflow-y-auto p-5 sm:p-6">{children}</div>
           </motion.div>
         </div>
       )}
