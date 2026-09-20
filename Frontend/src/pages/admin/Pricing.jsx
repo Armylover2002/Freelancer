@@ -25,7 +25,7 @@ export default function Pricing() {
   const onSubmit = async (values) => {
     const payload = { ...values, startingPrice: Number(values.startingPrice) };
     try {
-      if (values._id) await update({ id: values._id, payload });
+      if (modalItem?._id) await update({ id: modalItem._id, payload });
       else await create(payload);
       setModalItem(null);
     } catch (err) {

@@ -23,7 +23,7 @@ export default function Faqs() {
 
   const onSubmit = async (values) => {
     try {
-      if (values._id) await update({ id: values._id, payload: values });
+      if (modalItem?._id) await update({ id: modalItem._id, payload: values });
       else await create(values);
       setModalItem(null);
     } catch (err) {

@@ -21,13 +21,17 @@ export default function Testimonials() {
   const rating = watch('rating');
 
   useEffect(() => {
-    if (modalItem) reset({ ...EMPTY, ...modalItem });
+    if (modalItem) reset({ ...EMPTY, ...modalItem }, { keepDefaultValues: false });
   }, [modalItem, reset]);
 
   const onSubmit = async (values) => {
     try {
-      if (values._id) await update({ id: values._id, payload: values });
-      else await create(values);
+      // Use the modal's own item id (not a form field) so a stale hidden _id can never
+      // turn "Add" into an overwrite of a previously edited testimonial.
+      const { _id, createdAt, updatedAt, __v, ...payload } = values;
+      const id = modalItem?._id;
+      if (id) await update({ id, payload });
+      else await create(payload);
       setModalItem(null);
     } catch (err) {
       applyServerErrors(err, setError);
@@ -52,7 +56,6 @@ export default function Testimonials() {
 
       <Modal open={Boolean(modalItem)} onClose={() => setModalItem(null)} title={modalItem?._id ? 'Edit Testimonial' : 'Add Testimonial'} maxWidth="max-w-2xl">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <input type="hidden" {...register('_id')} />
 
           {watch('published') ? (
             <div className="callout-success">

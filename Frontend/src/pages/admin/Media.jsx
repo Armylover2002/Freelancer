@@ -2,17 +2,19 @@ import { useRef, useState } from 'react';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { Copy, Info, Loader2, Trash2, Upload } from 'lucide-react';
+import { Copy, Eye, Info, Loader2, Trash2, Upload } from 'lucide-react';
 import { mediaAdminApi } from '../../api/adminApi.js';
 import { extractErrorMessage } from '../../api/axiosClient.js';
 import { AdminToolbar } from '../../components/admin/AdminToolbar.jsx';
 import { EmptyState, Skeleton } from '../../components/ui/States.jsx';
 import { Pagination } from '../../components/ui/Pagination.jsx';
-import { ConfirmDialog } from '../../components/ui/Modal.jsx';
+import { ConfirmDialog, Modal } from '../../components/ui/Modal.jsx';
+import { RecordDetails } from '../../components/admin/DataTable.jsx';
 
 export default function Media() {
   const [page, setPage] = useState(1);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [viewTarget, setViewTarget] = useState(null);
   const fileInputRef = useRef(null);
   const queryClient = useQueryClient();
 
@@ -101,6 +103,9 @@ export default function Media() {
               <div key={m._id} className="group relative aspect-square overflow-hidden rounded-xl border border-ink-900/8 bg-ink-900/5">
                 <img src={m.url} alt={m.altText} className="h-full w-full object-cover" loading="lazy" />
                 <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/50 opacity-0 transition group-hover:opacity-100">
+                  <button onClick={() => setViewTarget(m)} className="rounded-full bg-white/90 p-2 text-ink-900" aria-label="View">
+                    <Eye className="h-4 w-4" />
+                  </button>
                   <button onClick={() => copyUrl(m.url)} className="rounded-full bg-white/90 p-2 text-ink-900" aria-label="Copy URL">
                     <Copy className="h-4 w-4" />
                   </button>
@@ -114,6 +119,10 @@ export default function Media() {
           {data?.meta && <Pagination page={data.meta.page} totalPages={data.meta.totalPages} onPageChange={setPage} />}
         </>
       )}
+
+      <Modal open={Boolean(viewTarget)} onClose={() => setViewTarget(null)} title="Media details" maxWidth="max-w-2xl">
+        {viewTarget && <RecordDetails record={viewTarget} />}
+      </Modal>
 
       <ConfirmDialog
         open={Boolean(deleteTarget)}

@@ -31,7 +31,7 @@ export default function Services() {
   const onSubmit = async (values) => {
     const payload = { ...values, startingPrice: values.startingPrice === '' ? undefined : Number(values.startingPrice) };
     try {
-      if (values._id) await update({ id: values._id, payload });
+      if (modalItem?._id) await update({ id: modalItem._id, payload });
       else await create(payload);
       setModalItem(null);
     } catch (err) {
