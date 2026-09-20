@@ -1,5 +1,6 @@
 import { useSiteSettings } from '../../hooks/useSiteSettings.js';
 import { useDocumentHead } from '../../hooks/useDocumentHead.js';
+import { PageHero } from '../../components/ui/PageHero.jsx';
 import { LegalContent } from '../../components/ui/LegalContent.jsx';
 
 export default function Privacy() {
@@ -11,23 +12,24 @@ export default function Privacy() {
 
   if (customPolicy) {
     return (
-      <div className="section-y container-page">
+      <div>
+<PageHero eyebrow="Legal" title="Privacy Policy" description={`Last updated: ${new Date().toLocaleDateString(undefined, { dateStyle: 'long' })}`} />
+<div className="container-page py-12 sm:py-16">
         <div className="mx-auto max-w-3xl">
-          <h1 className="text-3xl font-extrabold text-ink-900">Privacy Policy</h1>
-          <p className="mt-2 text-sm text-ink-900/45">Last updated: {new Date().toLocaleDateString()}</p>
-          <div className="mt-8">
+          <div className="">
             <LegalContent text={customPolicy} />
           </div>
         </div>
+      </div>
       </div>
     );
   }
 
   return (
-    <div className="section-y container-page">
+    <div>
+<PageHero eyebrow="Legal" title="Privacy Policy" description={`Last updated: ${new Date().toLocaleDateString(undefined, { dateStyle: 'long' })}`} />
+<div className="container-page py-12 sm:py-16">
       <div className="mx-auto max-w-3xl">
-        <h1 className="text-3xl font-extrabold text-ink-900">Privacy Policy</h1>
-        <p className="mt-2 text-sm text-ink-900/45">Last updated: {new Date().toLocaleDateString()}</p>
 
         <div className="mt-8 space-y-6 text-sm leading-relaxed text-ink-900/70">
           <p>
@@ -79,6 +81,7 @@ export default function Privacy() {
           </section>
         </div>
       </div>
+    </div>
     </div>
   );
 }

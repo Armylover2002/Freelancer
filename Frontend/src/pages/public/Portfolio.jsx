@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { PageHero } from '../../components/ui/PageHero.jsx';
 import { Search } from 'lucide-react';
 import { useProjects } from '../../hooks/usePublicData.js';
 import { Stagger } from '../../components/ui/AnimatedReveal.jsx';
@@ -31,15 +32,7 @@ export default function Portfolio() {
 
   return (
     <div>
-      <section className="bg-ink-950 text-white section-y">
-        <div className="container-page text-center">
-          <span className="badge bg-white/10 text-white/70">Portfolio</span>
-          <h1 className="mt-5 text-4xl font-extrabold sm:text-5xl">Genuine work, real outcomes</h1>
-          <p className="mx-auto mt-5 max-w-2xl text-white/60">
-            A selection of projects we've delivered - each entry reflects real client work.
-          </p>
-        </div>
-      </section>
+      <PageHero eyebrow="Portfolio" title="Genuine work, real outcomes" description="A selection of projects we've delivered - each entry reflects real client work." />
 
       <section className="section-y container-page">
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
