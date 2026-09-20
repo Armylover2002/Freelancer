@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { PageHero } from '../../components/ui/PageHero.jsx';
 import { Mail, Phone, MessageCircle, MapPin, ArrowUpRight } from 'lucide-react';
 import { useSiteSettings } from '../../hooks/useSiteSettings.js';
 import { AnimatedReveal } from '../../components/ui/AnimatedReveal.jsx';
@@ -23,15 +24,7 @@ export default function Contact() {
 
   return (
     <div>
-      <section className="bg-ink-950 text-white section-y">
-        <div className="container-page text-center">
-          <span className="badge bg-white/10 text-white/70">Contact</span>
-          <h1 className="mt-5 text-4xl font-extrabold sm:text-5xl">Let's talk about your project</h1>
-          <p className="mx-auto mt-5 max-w-2xl text-white/60">
-            Reach out directly, or submit your requirements through our project form for a faster, structured response.
-          </p>
-        </div>
-      </section>
+      <PageHero eyebrow="Contact" title="Let's talk about your project" description="Reach out directly, or submit your requirements through our project form for a faster, structured response." />
 
       <section className="section-y container-page">
         <div className="grid gap-10 lg:grid-cols-2">

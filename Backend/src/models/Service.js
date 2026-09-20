@@ -7,7 +7,7 @@ const serviceSchema = new mongoose.Schema(
     icon: { type: String, default: '' },
     shortDescription: { type: String, required: true, maxlength: 500 },
     description: { type: String, default: '', maxlength: 8000 },
-    features: [{ type: String, trim: true, maxlength: 300 }],
+    features: [{ type: String, trim: true }],
     startingPrice: { type: Number, min: 0 },
     timeline: { type: String, default: '', maxlength: 200 },
     order: { type: Number, default: 0 },

@@ -5,7 +5,7 @@ export const serviceSchema = z.object({
   icon: z.string().max(60).optional().default(''),
   shortDescription: z.string().trim().min(5).max(500),
   description: z.string().max(8000).optional().default(''),
-  features: z.array(z.string().max(300)).optional().default([]),
+  features: z.array(z.string()).optional().default([]),
   startingPrice: z.number().min(0).optional(),
   timeline: z.string().max(200).optional().default(''),
   order: z.number().optional().default(0),
