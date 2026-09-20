@@ -11,7 +11,7 @@ const teamMemberSchema = new mongoose.Schema(
     role: { type: String, required: true, trim: true, maxlength: 200 },
     experienceText: { type: String, default: '', maxlength: 300 },
     specialty: { type: String, default: '', maxlength: 300 },
-    technologies: [{ type: String, trim: true, maxlength: 100 }],
+    technologies: [{ type: String, trim: true }],
     bio: { type: String, default: '', maxlength: 5000 },
     projectIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }],
     socials: {

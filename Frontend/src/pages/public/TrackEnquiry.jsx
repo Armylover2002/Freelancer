@@ -211,10 +211,11 @@ export default function TrackEnquiry() {
   };
 
   return (
-    <div className="section-y container-page">
+    <div className="bg-gradient-to-b from-accent-500/[0.08] via-transparent to-transparent">
+    <div className="container-page py-12 sm:py-16 lg:py-20">
       <div className="mx-auto max-w-3xl">
         <AnimatedReveal className="text-center">
-          <h1 className="text-3xl font-extrabold text-ink-900 sm:text-4xl">Track Your Request</h1>
+          <h1 className="text-2xl font-extrabold tracking-tight text-ink-900 sm:text-4xl">Track Your Request</h1>
           <p className="mt-3 text-ink-900/55">
             Enter the email you used when submitting your project request to see its current status.
           </p>
@@ -255,6 +256,7 @@ export default function TrackEnquiry() {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 }

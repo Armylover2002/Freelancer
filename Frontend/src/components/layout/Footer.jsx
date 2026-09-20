@@ -43,8 +43,17 @@ export function Footer() {
   const socials = settings?.socials || {};
 
   return (
-    <footer className="border-t border-ink-900/8 bg-ink-950 text-white/70">
-      <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
+    <footer className="mt-24 border-t border-ink-900/8 bg-ink-950 text-white/70">
+      <div className="container-page">
+        <div className="-mt-16 mb-12 rounded-3xl bg-gradient-to-r from-accent-600 to-fuchsia-600 p-6 text-white shadow-2xl sm:p-8 lg:flex lg:items-center lg:justify-between lg:gap-8">
+          <div>
+            <p className="text-xl font-extrabold sm:text-2xl">Have a project in mind?</p>
+            <p className="mt-1 text-sm text-white/80">Tell us what you need - we reply within 24-48 business hours.</p>
+          </div>
+          <Link to="/start-project" className="btn mt-5 w-full bg-white text-ink-900 hover:bg-white/90 lg:mt-0 lg:w-auto lg:shrink-0">Start Your Project</Link>
+        </div>
+      </div>
+      <div className="container-page grid gap-10 pb-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.3fr]">
         <div>
           <p className="text-lg font-extrabold text-white">{agencyName}</p>
           <p className="mt-3 max-w-xs text-sm leading-relaxed">
@@ -69,11 +78,11 @@ export function Footer() {
         </div>
 
         <div>
-          <p className="text-sm font-semibold text-white">Quick Links</p>
+          <p className="text-sm font-bold uppercase tracking-wider text-white">Quick Links</p>
           <ul className="mt-4 space-y-2 text-sm">
             {QUICK_LINKS.map((l) => (
               <li key={l.to}>
-                <Link to={l.to} className="transition hover:text-white">
+                <Link to={l.to} className="inline-block py-0.5 transition hover:translate-x-1 hover:text-white">
                   {l.label}
                 </Link>
               </li>
@@ -82,7 +91,7 @@ export function Footer() {
         </div>
 
         <div>
-          <p className="text-sm font-semibold text-white">Legal</p>
+          <p className="text-sm font-bold uppercase tracking-wider text-white">Legal</p>
           <ul className="mt-4 space-y-2 text-sm">
             {LEGAL_LINKS.map((l) => (
               <li key={l.to}>
@@ -95,7 +104,7 @@ export function Footer() {
         </div>
 
         <div>
-          <p className="text-sm font-semibold text-white">Contact</p>
+          <p className="text-sm font-bold uppercase tracking-wider text-white">Contact</p>
           <ul className="mt-4 space-y-2.5 text-sm">
             {settings?.contact?.email && (
               <li className="flex items-center gap-2">

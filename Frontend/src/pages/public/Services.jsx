@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
+import { PageHero } from '../../components/ui/PageHero.jsx';
 import { ArrowUpRight } from 'lucide-react';
 import { useServices } from '../../hooks/usePublicData.js';
-import { SectionHeading } from '../../components/ui/SectionHeading.jsx';
 import { Stagger } from '../../components/ui/AnimatedReveal.jsx';
 import { ServiceCard } from '../../components/sections/ServiceCard.jsx';
 import { EmptyState, Skeleton } from '../../components/ui/States.jsx';
@@ -17,15 +17,7 @@ export default function Services() {
 
   return (
     <div>
-      <section className="bg-ink-950 text-white section-y">
-        <div className="container-page text-center">
-          <span className="badge bg-white/10 text-white/70">Services</span>
-          <h1 className="mt-5 text-4xl font-extrabold sm:text-5xl">What we build for you</h1>
-          <p className="mx-auto mt-5 max-w-2xl text-white/60">
-            Full-stack capability across marketing sites, e-commerce and custom web applications.
-          </p>
-        </div>
-      </section>
+      <PageHero eyebrow="Services" title="What we build for you" description="Full-stack capability across marketing sites, e-commerce and custom web applications." />
 
       <section className="section-y container-page">
         {isLoading ? (
@@ -42,13 +34,13 @@ export default function Services() {
           </Stagger>
         )}
 
-        <SectionHeading title="" className="hidden" />
-        <div className="mt-14 rounded-2xl bg-ink-900 p-8 text-center text-white sm:p-12">
-          <h2 className="text-2xl font-bold">Not sure what you need?</h2>
-          <p className="mx-auto mt-2 max-w-lg text-white/60">
+        <div className="relative mt-14 overflow-hidden rounded-3xl bg-gradient-to-br from-ink-900 via-ink-800 to-accent-700 p-8 text-center text-white sm:p-12">
+          <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-fuchsia-500/30 blur-3xl" />
+          <h2 className="relative text-2xl font-extrabold sm:text-3xl">Not sure what you need?</h2>
+          <p className="relative mx-auto mt-3 max-w-lg text-white/70">
             Tell us about your project and we'll recommend the right approach and scope.
           </p>
-          <Link to="/start-project" className="btn-accent mt-6">
+          <Link to="/start-project" className="btn-accent relative mt-7 w-full sm:w-auto">
             Start Your Project <ArrowUpRight className="h-4 w-4" />
           </Link>
         </div>

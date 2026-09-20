@@ -18,6 +18,20 @@ html {
 
 body {
   @apply bg-surface-muted text-ink-900 antialiased font-sans;
+  text-rendering: optimizeLegibility;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+::selection {
+  background: rgba(106, 92, 245, 0.25);
+}
+
+img {
+  max-width: 100%;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -35,11 +49,11 @@ body {
   }
 
   .section-y {
-    @apply py-16 sm:py-24;
+    @apply py-14 sm:py-20 lg:py-24;
   }
 
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 min-h-[44px] text-sm font-semibold transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500 disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-primary {
@@ -79,6 +93,10 @@ body {
 
   .label {
     @apply mb-1.5 block text-sm font-semibold text-ink-900/80;
+  }
+
+  .surface-card {
+    @apply rounded-2xl border border-ink-900/8 bg-white p-5 shadow-soft sm:p-6;
   }
 
   .card {
